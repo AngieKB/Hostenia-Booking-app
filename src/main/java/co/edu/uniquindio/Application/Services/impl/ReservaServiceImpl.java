@@ -34,6 +34,7 @@ public class ReservaServiceImpl implements ReservaService {
     private final UsuarioRepository usuarioRepository;
     private final AlojamientoRepository alojamientoRepository;
     private final EmailService emailService;
+    private final AuthService authService;
 
     @Override
     public void cancelarReserva(Long id)  {
@@ -137,6 +138,7 @@ public class ReservaServiceImpl implements ReservaService {
         newReserva.setEstado(EstadoReserva.PENDIENTE);
         newReserva.setHuesped(huesped);
         newReserva.setAlojamiento(alojamiento);
+        newReserva.setHuesped(authService.getUsuarioAutenticado());
 
         Double valorTotal = calcularValorTotal(newReserva);
         newReserva.setTotal(valorTotal);

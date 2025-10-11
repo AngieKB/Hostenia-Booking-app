@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ReservaMapper {
     @Mapping(target = "fechaCreacion", expression = "java(java.time.LocalDateTime.now())")
+    @Mapping(target = "huesped", ignore = true)
     Reserva toEntity(RealizarReservaDTO dto);
     ReservaDTO toDTO(Reserva entity);
     @Mapping(source = "reserva.alojamiento.titulo", target = "alojamientoTitulo")
