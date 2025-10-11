@@ -5,6 +5,7 @@ import co.edu.uniquindio.Application.DTO.*;
 import co.edu.uniquindio.Application.DTO.Alojamiento.*;
 import co.edu.uniquindio.Application.Services.AlojamientoService;
 import co.edu.uniquindio.Application.Services.impl.AlojamientoServiceImpl;
+import co.edu.uniquindio.Application.Services.impl.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import java.util.Optional;
 public class AlojamientoController {
 
     private final AlojamientoService alojamientoService;
+    private final AuthService authService;
 
     @PreAuthorize("hasRole('ANFITRION')")
     @PostMapping(consumes = "multipart/form-data")
@@ -50,7 +52,7 @@ public class AlojamientoController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseDTO<>(false, "El usuario ha sido eliminado"));
     }
 
-    @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
+    @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDTO<AlojamientoDTO>> obtenerPorId(@PathVariable("id") Long id) throws Exception{
         return ResponseEntity.ok(new ResponseDTO<>(false, alojamientoService.obtenerPorId(id)));
@@ -65,72 +67,81 @@ public class AlojamientoController {
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/buscar/ciudad")
-    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> buscarPorCiudad(@RequestParam String ciudad) throws Exception {
+    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> buscarPorCiudad(@RequestParam("ciudad") String ciudad) throws Exception {
         List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.buscarPorCiudad(ciudad));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/buscar/fechas")
-    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> buscarPorFechas(@RequestParam LocalDateTime fechaInicio, @RequestParam LocalDateTime fechaFin) throws Exception{
+    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> buscarPorFechas(@RequestParam("fechaInicio") LocalDateTime fechaInicio, @RequestParam("fechaFin") LocalDateTime fechaFin) throws Exception{
         List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.buscarPorFechas(fechaInicio,fechaFin));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/buscar/precio")
-    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> buscarPorPrecio(@RequestParam Double precioMin, @RequestParam Double precioMax) throws Exception{
-        List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.buscarPorPrecio(precioMin,precioMax));
+    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> buscarPorPrecio(
+            @RequestParam("precioMin") Double precioMin,
+            @RequestParam("precioMax") Double precioMax) throws Exception {
+
+        List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.buscarPorPrecio(precioMin, precioMax));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
-    @GetMapping("/buscar/" +"servicios")
-    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> buscarPorServicios(@RequestParam List<String> servicios) throws Exception{
+    @GetMapping("/buscar/servicios")
+    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> buscarPorServicios(
+            @RequestParam("servicios") List<String> servicios) throws Exception {
+
         List<AlojamientoDTO> list = new ArrayList<>(alojamientoService.buscarPorServicios(servicios));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 
     @PreAuthorize("hasRole('ANFITRION')")
     @GetMapping("/listarPorAnfitrion/{idAnfitrion}")
-    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> listarPorAnfitrion(@PathVariable("idAnfitrion") Long idAnfitrion) throws Exception {
+    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> listarPorAnfitrion(
+            @PathVariable("idAnfitrion") Long idAnfitrion) throws Exception {
+
         List<AlojamientoDTO> list = new ArrayList<>(alojamientoService.listarPorAnfitrion(idAnfitrion));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
-    @PostMapping("/{usuarioId}/favoritos/{alojamientoId}")
+    @PostMapping("/favoritos/{alojamientoId}")
     public ResponseEntity<ResponseDTO<String>> agregarAFavoritos(
-            @PathVariable Long usuarioId,
-            @PathVariable Long alojamientoId) throws Exception {
+            @PathVariable("alojamientoId") Long alojamientoId) throws Exception {
 
+        Long usuarioId = authService.getUsuarioAutenticado().getId(); // <-- obtenemos el id desde el token
         alojamientoService.agregarAFavoritos(usuarioId, alojamientoId);
         return ResponseEntity.ok(new ResponseDTO<>(false, "Alojamiento agregado a favoritos"));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
-    @DeleteMapping("/{usuarioId}/favoritos/{alojamientoId}")
+    @DeleteMapping("/favoritos/{alojamientoId}")
     public ResponseEntity<ResponseDTO<String>> quitarDeFavoritos(
-            @PathVariable Long usuarioId,
-            @PathVariable Long alojamientoId) throws Exception {
+            @PathVariable("alojamientoId") Long alojamientoId) throws Exception {
 
+        Long usuarioId = authService.getUsuarioAutenticado().getId();
         alojamientoService.quitarDeFavoritos(usuarioId, alojamientoId);
         return ResponseEntity.ok(new ResponseDTO<>(false, "Alojamiento removido de favoritos"));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
-    @GetMapping("/{usuarioId}/favoritos")
-    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> listarFavoritos(@PathVariable Long usuarioId) throws Exception {
+    @GetMapping("/favoritos")
+    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> listarFavoritos() throws Exception {
+
+        Long usuarioId = authService.getUsuarioAutenticado().getId();
         List<ResumenAlojamientoDTO> favoritos = alojamientoService.listarFavoritos(usuarioId);
         return ResponseEntity.ok(new ResponseDTO<>(false, favoritos));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/{alojamientoId}/favorito/count")
-    public ResponseEntity<ResponseDTO<Integer>> contarUsuariosFavorito(@PathVariable Long alojamientoId) throws Exception {
+    public ResponseEntity<ResponseDTO<Integer>> contarUsuariosFavorito(
+            @PathVariable("alojamientoId") Long alojamientoId) throws Exception {
+
         int cantidad = alojamientoService.contarUsuariosFavorito(alojamientoId);
         return ResponseEntity.ok(new ResponseDTO<>(false, cantidad));
     }
-
-
 }

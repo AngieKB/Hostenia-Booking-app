@@ -1,9 +1,6 @@
 @env = local
-@tokenHuesped = <Pega_aquí_tu_token_de_HUESPED>
-@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9BTkZJVFJJT04iLCJzdWIiOiI4IiwiaWF0IjoxNzYwMjEyODI3LCJleHAiOjE3NjAyMTY0Mjd9.h4yfEnGQiPqrF09Mkas_L179shQ6Ymm_MQ9vvWkPdZ8
-
-
-
+@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiOSIsImlhdCI6MTc2MDIxODk4MiwiZXhwIjoxNzYwMjIyNTgyfQ.XkYn0ynepQdGEP7sr2Xv3M7FifEAK_jk54sEYV3xoB8
+@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwicm9sZSI6IlJPTEVfQU5GSVRSSU9OIiwibmFtZSI6IkFsYmVydG8iLCJzdWIiOiI4IiwiaWF0IjoxNzYwMjE1NzU1LCJleHAiOjE3NjAyMTkzNTV9.zLv7_4l8Qg8HOSe-NUb0i30ep0ShQZXNR4TsgZnqANo
 // ==========================================================
 // ===============  ENDPOINTS DE ALOJAMIENTOS  ==============
 // ==========================================================
@@ -14,58 +11,66 @@
 ### Crear un alojamiento (ANFITRION)
 POST http://localhost:8080/api/alojamiento
 Authorization: Bearer {{tokenAnfitrion}}
-Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Type: multipart/form-data; boundary=boundary
 
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="titulo"
 
 Cabaña en la montaña
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="descripcion"
 
 Un hermoso alojamiento con vista al bosque.
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="servicios"
 
 wifi
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="servicios"
 
 jacuzzi
-------WebKitFormBoundary7MA4YWxkTrZu0gW
-Content-Disposition: form-data; name="galeria"; filename="foto1.jpg"
+--boundary
+Content-Disposition: form-data; name="galeria"; filename="foto-test.jpg"
 Content-Type: image/jpeg
 
 < ./foto-test.jpg
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="ciudad"
 
 Medellín
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="direccion"
 
 Calle 10 #23-45
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="latitud"
 
 6.2442
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="longitud"
 
 -75.5812
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="precioNoche"
 
 200000
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="capacidadMax"
 
 4
-------WebKitFormBoundary7MA4YWxkTrZu0gW
+--boundary
 Content-Disposition: form-data; name="pais"
 
 Colombia
-------WebKitFormBoundary7MA4YWxkTrZu0gW--
+--boundary
+Content-Disposition: form-data; name="estado"
+
+ACTIVO
+--boundary--
+
+
+
+
 
 
 // ===================== EDITAR ALOJAMIENTO =====================
@@ -108,7 +113,7 @@ Authorization: Bearer {{tokenAnfitrion}}
 
 // ===================== OBTENER POR ID =====================
 ### Obtener alojamiento por ID (HUESPED o ANFITRION)
-GET http://localhost:8080/api/alojamiento/4
+GET http://localhost:8080/api/alojamiento/9
 Authorization: Bearer {{tokenHuesped}}
 
 
@@ -146,20 +151,20 @@ Authorization: Bearer {{tokenHuesped}}
 
 // Agregar a favoritos
 ### Agregar un alojamiento a favoritos (HUESPED)
-POST http://localhost:8080/api/alojamiento/1/favoritos/2
+POST http://localhost:8080/api/alojamiento/favoritos/9
 Authorization: Bearer {{tokenHuesped}}
 
 // Quitar de favoritos
 ### Quitar un alojamiento de favoritos (HUESPED)
-DELETE http://localhost:8080/api/alojamiento/1/favoritos/2
+DELETE http://localhost:8080/api/alojamiento/favoritos/9
 Authorization: Bearer {{tokenHuesped}}
 
 // Listar favoritos
 ### Listar alojamientos favoritos del usuario (HUESPED)
-GET http://localhost:8080/api/alojamiento/1/favoritos
+GET http://localhost:8080/api/alojamiento/favoritos
 Authorization: Bearer {{tokenHuesped}}
 
 // Contar favoritos
 ### Contar cuántos usuarios tienen un alojamiento como favorito (HUESPED)
-GET http://localhost:8080/api/alojamiento/2/favorito/count
+GET http://localhost:8080/api/alojamiento/9/favorito/count
 Authorization: Bearer {{tokenHuesped}}

@@ -14,6 +14,7 @@ import org.mapstruct.MappingConstants;
 public interface AlojamientoMapper {
     @Mapping(target = "fechaCreacion", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "galeria", ignore = true)
+    @Mapping(ignore = true, target = "reservas")
     Alojamiento toEntity(CrearAlojamientoDTO dto);
     AlojamientoDTO toDTO(Alojamiento entity);
     default Ubicacion crearUbicacion(CrearAlojamientoDTO dto) {

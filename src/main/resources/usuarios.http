@@ -70,7 +70,7 @@ Content-Type: application/json
 
 {
   "email": "angiekaterine0506@gmail.com",
-  "password": "Carlos1234."
+  "password": "Carlos123."
 }
 
 ### Obtener todos los usuarios (requiere token)
