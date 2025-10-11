@@ -14,6 +14,7 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PerfilAnfitrionMapper {
     PerfilAnfitrionDTO toDTO(PerfilAnfitrion entity);
+    @Mapping(target = "usuario", ignore = true) // Ignorar el mapeo del campo usuario
     PerfilAnfitrion toEntity(CrearAnfitrionDTO dto);
     void updatePerfilAnfitrionFromDto(EditarAnfitrionDTO dto, @MappingTarget PerfilAnfitrion anfitrion);
 }
