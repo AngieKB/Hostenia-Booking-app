@@ -1,6 +1,18 @@
 @env = local
-@token = pegarToken
+@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiMiIsImlhdCI6MTc2MDIwNjI5OSwiZXhwIjoxNzYwMjA5ODk5fQ.LQiMWAcrsC2W-95ofXcbcWYGX2IQQ6h-7JsbKgJH-4I
 //el token se obtiene del login, luego se puede copiar y pegar aquí para usar en las demás peticiones.
+
+### Crear perfil de anfitrión
+POST http://localhost:8080/api/auth/host-register
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "descripcion": "Me encanta recibir huéspedes en mi casa",
+  "documentosLegales": [null],
+  "usuarioId": 2
+}
+
 
 ### Login para obtener el token JWT
 POST http://localhost:8080/api/auth/login
@@ -12,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Obtener perfil de anfitrión por Id
-GET http://localhost:8080/api/perfiles-anfitrion/2
+GET http://localhost:8080/api/perfiles-anfitrion/1
 Authorization: Bearer {{token}}
 
 ### Obtener todos los anfitriones
@@ -20,17 +32,17 @@ GET http://localhost:8080/api/perfiles-anfitrion
 Authorization: Bearer {{token}}
 
 ### Actualizar perfil de anfitrión
-PUT http://localhost:8080/api/perfiles-anfitrion/2
+PUT http://localhost:8080/api/perfiles-anfitrion/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "nombre": "Alberto Editado",
-  "telefono": "1091091099",
+  "telefono": "1091091088",
   "fotoUrl": null,
   "descripcion": "El 8 siempre fue mi número predilecto"
 }
 
 ### Eliminar perfil de anfitrión
-DELETE http://localhost:8080/api/perfiles-anfitrion/2
+DELETE http://localhost:8080/api/perfiles-anfitrion/1
 Authorization: Bearer {{token}}
