@@ -11,6 +11,7 @@ import org.mapstruct.MappingConstants;
 
 @Mapper (componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AlojamientoMapper {
+    @Mapping(target = "fechaCreacion", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "galeria", ignore = true)
     Alojamiento toEntity(CrearAlojamientoDTO dto);
     AlojamientoDTO toDTO(Alojamiento entity);

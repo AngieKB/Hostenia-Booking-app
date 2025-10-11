@@ -5,6 +5,7 @@ import co.edu.uniquindio.Application.Exceptions.InvalidOperationException;
 import co.edu.uniquindio.Application.Exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.Application.Model.*;
 import co.edu.uniquindio.Application.Repository.AlojamientoRepository;
+import co.edu.uniquindio.Application.Repository.PerfilAnfitrionRepository;
 import co.edu.uniquindio.Application.Repository.UsuarioRepository;
 import co.edu.uniquindio.Application.Services.AlojamientoService;
 import co.edu.uniquindio.Application.Services.ImageService;
@@ -27,7 +28,8 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     private final AlojamientoMapper alojamientoMapper;
     private final ImageService imageService;
     private final UsuarioRepository usuarioRepository;
-
+    private final AuthService authService;
+    private final PerfilAnfitrionRepository perfilAnfitrionRepository;
 
     @Override
     public void guardar(CrearAlojamientoDTO dto) throws Exception {
@@ -42,6 +44,13 @@ public class AlojamientoServiceImpl implements AlojamientoService {
         alojamiento.setGaleria(urls);
         alojamiento.setEstado(ACTIVO);
         alojamiento.setUbicacion(ubicacion);
+
+        Usuario usuario = authService.getUsuarioAutenticado();
+
+        PerfilAnfitrion perfilAnfitrion = perfilAnfitrionRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new RuntimeException("El usuario autenticado no tiene perfil de anfitrión."));
+
+        alojamiento.setAnfitrion(perfilAnfitrion);
 
         alojamientoRepository.save(alojamiento);
     }

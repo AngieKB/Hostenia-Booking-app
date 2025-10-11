@@ -43,7 +43,7 @@ public class AlojamientoController {
 
     @PreAuthorize("hasRole('ANFITRION')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO<String>> eliminar(@PathVariable Long id) throws Exception{
+    public ResponseEntity<ResponseDTO<String>> eliminar(@PathVariable("id") Long id) throws Exception{
         alojamientoService.eliminar(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseDTO<>(false, "El usuario ha sido eliminado"));
     }
