@@ -1,5 +1,5 @@
 @env = local
-@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiOSIsImlhdCI6MTc2MDIxODk4MiwiZXhwIjoxNzYwMjIyNTgyfQ.XkYn0ynepQdGEP7sr2Xv3M7FifEAK_jk54sEYV3xoB8
+@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiOSIsImlhdCI6MTc2MDIyMjQ3NCwiZXhwIjoxNzYwMjI2MDc0fQ.C5fy-jj0ebNf3wKcZO9UVYYmCCzp__NPYXfWzFBziv8
 @tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwicm9sZSI6IlJPTEVfQU5GSVRSSU9OIiwibmFtZSI6IkFsYmVydG8iLCJzdWIiOiI4IiwiaWF0IjoxNzYwMjE1NzU1LCJleHAiOjE3NjAyMTkzNTV9.zLv7_4l8Qg8HOSe-NUb0i30ep0ShQZXNR4TsgZnqANo
 // ==========================================================
 // ===============  ENDPOINTS DE ALOJAMIENTOS  ==============

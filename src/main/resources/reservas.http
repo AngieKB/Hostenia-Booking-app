@@ -1,5 +1,10 @@
 ### Variables de tokens
-@tokenHUESPED = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiOSIsImlhdCI6MTc2MDIyMjQ3NCwiZXhwIjoxNzYwMjI2MDc0fQ.C5fy-jj0ebNf3wKcZO9UVYYmCCzp__NPYXfWzFBziv8
+@tokenHUESPED = eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQ2FybG9zIiwicm9sZSI6IlJPTEVfSFVFU1BFRCIsImVtYWlsIjoiYW5naWVrYXRlcmluZTA1MDZAZ21haWwuY29tIiwic3ViIjoiOSIsImlhdCI6MTc2MDIyMjk2MSwiZXhwIjoxNzYwMjI2NTYxfQ.FcbspIbWBo2USNe45aOgrpdzhnum5l-rW5qLdKJGNyE
+
+
+
+
+
 @tokenANFITRION = <TOKEN_ANFITRION>
 
 ###
@@ -19,7 +24,7 @@ Content-Type: application/json
 ###
 
 ### Editar Reserva
-PUT http://localhost:8080/api/reserva/9
+PUT http://localhost:8080/api/reserva/7
 Authorization: Bearer {{tokenHUESPED}}
 Content-Type: application/json
 
@@ -45,7 +50,7 @@ Authorization: Bearer {{tokenHUESPED}}
 ###
 
 ### Obtener mis reservas (HUESPED)
-GET http://localhost:8080/api/reserva/mis-reservas/1
+GET http://localhost:8080/api/reserva/mis-reservas
 Authorization: Bearer {{tokenHUESPED}}
 
 ###

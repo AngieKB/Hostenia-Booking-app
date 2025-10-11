@@ -41,7 +41,7 @@ public class ReservaController {
 
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO<String>> delete(@PathVariable Long id) throws Exception{
+    public ResponseEntity<ResponseDTO<String>> delete(@PathVariable("id") Long id) throws Exception{
         reservaService.cancelarReserva(id);
         return ResponseEntity.ok(new ResponseDTO<>(false, "La reserva ha sido cancelada"));
     }
@@ -56,14 +56,15 @@ public class ReservaController {
     }
 
     @PreAuthorize("hasRole('HUESPED')")
-    @GetMapping("/mis-reservas/{usuarioId}")
-    public ResponseEntity<ResponseDTO<List<ReservaUsuarioDTO>>> obtenerMisReservas(@PathVariable Long usuarioId) {
+    @GetMapping("/mis-reservas")
+    public ResponseEntity<ResponseDTO<List<ReservaUsuarioDTO>>> obtenerMisReservas() {
         List<ReservaUsuarioDTO> reservas = reservaService.obtenerMisReservas();
         return ResponseEntity.ok(new ResponseDTO<>(false, reservas));
     }
+
     @PreAuthorize("hasRole('ANFITRION')")
     @GetMapping("/mis-reservas-aloja/{alojamientoId}")
-    public ResponseEntity<ResponseDTO<List<ReservaAlojamientoDTO>>> obtenerMisReservasPorAlojamiento(@PathVariable Long alojamientoId) {
+    public ResponseEntity<ResponseDTO<List<ReservaAlojamientoDTO>>> obtenerMisReservasPorAlojamiento(@PathVariable("alojamientoId") Long alojamientoId) {
         List<ReservaAlojamientoDTO> reservas = reservaService.obtenerReservasPorIdAlojamiento(alojamientoId);
         return ResponseEntity.ok(new ResponseDTO<>(false, reservas));
     }

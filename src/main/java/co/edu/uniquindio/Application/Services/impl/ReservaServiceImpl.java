@@ -37,29 +37,39 @@ public class ReservaServiceImpl implements ReservaService {
     private final AuthService authService;
 
     @Override
-    public void cancelarReserva(Long id)  {
+    public void cancelarReserva(Long id) {
         reservaRepository.findById(id).ifPresentOrElse(reserva -> {
+
+            // Validar si la reserva ya está cancelada
             if(reserva.getEstado() == EstadoReserva.CANCELADA) {
                 throw new InvalidOperationException("La reserva ya se encuentra cancelada.");
             }
+
+            // Validar si la reserva ya está completada
+            if(reserva.getEstado() == EstadoReserva.COMPLETADA) {
+                throw new InvalidOperationException("No se puede cancelar una reserva que ya ha sido completada.");
+            }
+
             LocalDateTime ahora = LocalDateTime.now();
             if(reserva.getFechaCheckIn().minusHours(48).isBefore(ahora)) {
                 throw new InvalidOperationException("No se puede cancelar la reserva a menos de 48 horas del check-in.");
             }
+
             reserva.setEstado(EstadoReserva.CANCELADA);
             reservaRepository.save(reserva);
+
             try {
                 emailService.sendMail(
                         new EmailDTO("Cancelación de: " + reserva.getHuesped().getNombre(),
                                 "El usuario " + reserva.getHuesped().getNombre() +
-                                        "canceló su reserva que estaba registrada para el día " + reserva.getFechaCheckIn() +
-                                        "en el alojamiento " + reserva.getAlojamiento().getTitulo(),
+                                        " canceló su reserva que estaba registrada para el día " + reserva.getFechaCheckIn() +
+                                        " en el alojamiento " + reserva.getAlojamiento().getTitulo(),
                                 reserva.getAlojamiento().getAnfitrion().getUsuario().getEmail())
                 );
                 emailService.sendMail(
                         new EmailDTO("Cancelación de: " + reserva.getHuesped().getNombre(),
                                 "Ha cancelado su reserva que estaba registrada para el día " + reserva.getFechaCheckIn() +
-                                        "en el alojamiento " + reserva.getAlojamiento().getTitulo(),
+                                        " en el alojamiento " + reserva.getAlojamiento().getTitulo(),
                                 reserva.getHuesped().getEmail())
                 );
             } catch (Exception e) {
@@ -70,6 +80,7 @@ public class ReservaServiceImpl implements ReservaService {
             throw new ResourceNotFoundException("No existe una reserva con el id " + id);
         });
     }
+
 
     @Override
     public EstadoReserva obtenerEstadoReserva(Long id) {

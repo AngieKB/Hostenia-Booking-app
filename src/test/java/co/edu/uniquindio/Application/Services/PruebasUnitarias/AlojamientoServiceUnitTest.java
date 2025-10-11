@@ -3,10 +3,12 @@ package co.edu.uniquindio.Application.Services.PruebasUnitarias;
 import co.edu.uniquindio.Application.DTO.Alojamiento.*;
 import co.edu.uniquindio.Application.Model.*;
 import co.edu.uniquindio.Application.Repository.AlojamientoRepository;
+import co.edu.uniquindio.Application.Repository.PerfilAnfitrionRepository;
 import co.edu.uniquindio.Application.Repository.UsuarioRepository;
 import co.edu.uniquindio.Application.Services.impl.AlojamientoServiceImpl;
 import co.edu.uniquindio.Application.Mappers.AlojamientoMapper;
 import co.edu.uniquindio.Application.Services.ImageService;
+import co.edu.uniquindio.Application.Services.impl.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
@@ -27,6 +29,9 @@ class AlojamientoServiceUnitTest {
     private AlojamientoRepository alojamientoRepository;
 
     @Mock
+    private PerfilAnfitrionRepository perfilAnfitrionRepository;
+
+    @Mock
     private AlojamientoMapper alojamientoMapper;
 
     @Mock
@@ -34,6 +39,9 @@ class AlojamientoServiceUnitTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
+    @Mock
+    private AuthService authService;
+
 
 
     private Alojamiento alojamiento;
@@ -41,7 +49,7 @@ class AlojamientoServiceUnitTest {
     private ResumenAlojamientoDTO resumenAlojamientoDTO;
     private UbicacionDTO ubicacionDTO;
     private Usuario usuarioFavoritos;
-
+    private Usuario usuarioAnfitrion;
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -69,12 +77,19 @@ class AlojamientoServiceUnitTest {
                 4.0,
                 "http://image.com/img1.jpg"
         );
+        // Usuario anfitrión
+        Usuario anfitrionUsuario = new Usuario();
+        anfitrionUsuario.setId(2L);
+        anfitrionUsuario.setNombre("Pedro");
+        anfitrionUsuario.setEmail("pedro@mail.com");
+
         usuarioFavoritos = new Usuario();
         usuarioFavoritos.setId(1L);
         usuarioFavoritos.setFavoritos(new ArrayList<>());
 
 
-
+        PerfilAnfitrion perfilAnfitrion = new PerfilAnfitrion();
+        perfilAnfitrion.setUsuario(anfitrionUsuario);
         alojamiento = new Alojamiento();
         alojamiento.setUsuariosFavoritos(new ArrayList<>());
         alojamiento.setId(1L);
@@ -94,33 +109,66 @@ class AlojamientoServiceUnitTest {
         ));
         alojamiento.setReservas(new ArrayList<>());
         alojamiento.setComentarios(new ArrayList<>());
+        alojamiento.setAnfitrion(perfilAnfitrion);
     }
 
     @Test
     void guardarExitoso() throws Exception {
+        // Mock DTO y archivo
         CrearAlojamientoDTO crearDTO = mock(CrearAlojamientoDTO.class);
         MultipartFile file = mock(MultipartFile.class);
+
+        // Usuario autenticado y perfil de anfitrión
+        Usuario anfitrionUsuario = new Usuario();
+        anfitrionUsuario.setId(1L);
+        PerfilAnfitrion perfilAnfitrion = new PerfilAnfitrion();
+        perfilAnfitrion.setUsuario(anfitrionUsuario);
+
+        // Stub del authService para devolver el usuario autenticado
+        when(authService.getUsuarioAutenticado()).thenReturn(anfitrionUsuario);
+
+        // Stub del repositorio de perfiles para devolver el perfil del usuario
+        when(perfilAnfitrionRepository.findByUsuario(anfitrionUsuario))
+                .thenReturn(Optional.of(perfilAnfitrion));
+
+        // Stubs del DTO
         when(crearDTO.galeria()).thenReturn(List.of(file));
         when(imageService.upload(file)).thenReturn(Map.of("url", "http://image.com/img1.jpg"));
+
+        // Stub del mapper
         when(alojamientoMapper.toEntity(crearDTO)).thenReturn(alojamiento);
         when(alojamientoMapper.crearUbicacion(crearDTO)).thenReturn(alojamiento.getUbicacion());
 
+        // Ejecutar método
         alojamientoService.guardar(crearDTO);
 
+        // Verificaciones
         verify(alojamientoRepository, times(1)).save(alojamiento);
         assertEquals(List.of("http://image.com/img1.jpg"), alojamiento.getGaleria());
         assertEquals(EstadoAlojamiento.ACTIVO, alojamiento.getEstado());
     }
 
+
     @Test
     void editarAlojamientoExitoso() throws Exception {
-        when(alojamientoRepository.findById(1L)).thenReturn(Optional.of(alojamiento));
+        // DTOs de edición (pueden ser mocks)
+        AlojamientoDTO alojamientoDTO = mock(AlojamientoDTO.class);
+        UbicacionDTO ubicacionDTO = mock(UbicacionDTO.class);
 
-        alojamientoService.editarAlojamiento(1L, alojamientoDTO, ubicacionDTO);
+        // Stubs del repositorio y authService
+        when(alojamientoRepository.findById(alojamiento.getId())).thenReturn(Optional.of(alojamiento));
+        when(authService.getUsuarioAutenticado()).thenReturn(alojamiento.getAnfitrion().getUsuario());
 
-        verify(alojamientoMapper, times(1)).updateEntity(alojamiento, alojamientoDTO);
+        // Ejecutar método
+        alojamientoService.editarAlojamiento(alojamiento.getId(), alojamientoDTO, ubicacionDTO);
+
+        // Verificaciones
+        verify(alojamientoMapper, times(1)).updateEntity(alojamiento, alojamientoDTO, ubicacionDTO);
         verify(alojamientoRepository, times(1)).save(alojamiento);
     }
+
+
+
 
     @Test
     void eliminarSinReservasFuturasExitoso() throws Exception {
