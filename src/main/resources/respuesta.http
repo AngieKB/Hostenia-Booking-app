@@ -1,0 +1,22 @@
+@env = local
+@token = pegarToken
+# El token se obtiene del login, luego se copia aquí para usar en las demás peticiones.
+
+### Responder un comentario (solo rol ANFITRION)
+POST http://localhost:8080/api/respuesta
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "resouesta": "Gracias por tu comentario, me alegra que hayas disfrutado tu estancia.",
+  "comentarioId": 1,
+  "anfitrionId": 2
+}
+
+### Obtener todas las respuestas (rol ANFITRION o HUESPED)
+GET http://localhost:8080/api/respuesta?idComentario=1
+Authorization: Bearer {{token}}
+
+### Obtener una respuesta por id (rol ANFITRION o HUESPED)
+GET http://localhost:8080/api/respuesta/1
+Authorization: Bearer {{token}}

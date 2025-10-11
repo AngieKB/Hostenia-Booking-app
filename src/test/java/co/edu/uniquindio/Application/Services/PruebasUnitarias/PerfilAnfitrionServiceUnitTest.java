@@ -46,12 +46,6 @@ public class PerfilAnfitrionServiceUnitTest {
     @Test
     void testCrearAnfitrionExitoso() {
         CrearAnfitrionDTO dto = new CrearAnfitrionDTO(
-                "Ana",
-                "3001234567",
-                "ana@example.com",
-                "password123",
-                "http://foto.jpg",
-                LocalDate.of(1995, 5, 10),
                 "Soy anfitriona responsable",
                 List.of("documento1.pdf"),
                 1L
@@ -76,12 +70,6 @@ public class PerfilAnfitrionServiceUnitTest {
     @Test
     void testCrearAnfitrionNoEncontrado() {
         CrearAnfitrionDTO dto = new CrearAnfitrionDTO(
-                "Ana",
-                "3001234567",
-                "ana@example.com",
-                "password123",
-                "http://foto.jpg",
-                LocalDate.of(1995, 5, 10),
                 "Soy anfitriona responsable",
                 List.of("documento1.pdf"),
                 1L

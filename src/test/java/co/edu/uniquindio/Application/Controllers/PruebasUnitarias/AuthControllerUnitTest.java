@@ -88,7 +88,7 @@ class AuthControllerUnitTest {
 
     @Test
     void crearPerfilAnfitrion_Exitoso() {
-        CrearAnfitrionDTO dto = new CrearAnfitrionDTO("nombre", "3202342345", "correo@example", "123456789", null, null, "Descripcion", null, 1L);
+        CrearAnfitrionDTO dto = new CrearAnfitrionDTO("Descripcion", null, 1L);
         doNothing().when(perfilAnfitrionService).crearPerfil(dto);
 
         ResponseEntity<ResponseDTO<String>> response = authController.crearPerfilAnfitrion(dto);
@@ -100,7 +100,7 @@ class AuthControllerUnitTest {
 
     @Test
     void crearPerfilAnfitrion_ErrorUsuarioNoExiste() {
-        CrearAnfitrionDTO dto = new CrearAnfitrionDTO("nombre", "3202342345", "correo@example", "123456789", null, null, "Descripcion", null, 99L);
+        CrearAnfitrionDTO dto = new CrearAnfitrionDTO("Descripcion", null, 99L);
         doThrow(new RuntimeException("Usuario no encontrado")).when(perfilAnfitrionService).crearPerfil(dto);
 
         assertThrows(RuntimeException.class, () -> authController.crearPerfilAnfitrion(dto));

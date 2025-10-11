@@ -17,7 +17,7 @@ Content-Disposition: form-data; name="telefono"
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="email"
 
-carlos@email.com
+angiekaterine0506@gmail.com
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="password"
 
@@ -33,13 +33,44 @@ Content-Type: image/jpeg
 < ./foto-test.jpg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
+### Crear un usuario - anfitrión
+POST http://localhost:8080/api/auth/register
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="nombre"
+
+Alberto
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="telefono"
+
+12345677
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="email"
+
+alberto@email.com
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="password"
+
+Alberto123.
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fechaNacimiento"
+
+2000-10-22
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="fotoUrl"; filename="foto.jpg"
+Content-Type: image/jpeg
+
+< ./foto-test.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
 ### Login para obtener el token JWT
 POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "carlos@email.com",
-  "password": "Carlos123."
+  "email": "angiekaterine0506@gmail.com",
+  "password": "Carlos1234."
 }
 
 ### Obtener todos los usuarios (requiere token)
@@ -47,11 +78,11 @@ GET http://localhost:8080/api/usuario
 Authorization: Bearer {{token}}
 
 ### Obtener un usuario por id (cambie "id" por el id del usuario que desea obtener)
-GET http://localhost:8080/api/usuario/1
+GET http://localhost:8080/api/usuario/3
 Authorization: Bearer {{token}}
 
 ### Actualizar un usuario (cambie "id" por el id del usuario que desea actualizar)
-PUT http://localhost:8080/api/usuario/id
+PUT http://localhost:8080/api/usuario/3
 Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
@@ -68,6 +99,34 @@ Content-Disposition: form-data; name="telefono"
 null
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
+### Se olvidó la contraseña
+POST http://localhost:8080/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "angiekaterine0506@gmail.com"
+}
+
+### Resetear la contraseña (se pega el codigo de verificación que llega al correo)
+PUT  http://localhost:8080/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "angiekaterine0506@gmail.com",
+  "verificationCode": "428385",
+  "newPassword": "Carlos1234."
+}
+
+### Cambiar la contraseña actual por una nueva (requiere autenticación)
+PUT http://localhost:8080/api/usuario/5/cambiar-password
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "oldPassword": "Carlos1234.",
+  "newPassword": "Carlos123."
+}
+
 ### Eliminar un usuario (cambie "id" por el id del usuario que desea eliminar)
-DELETE http://localhost:8080/api/usuario/id
+DELETE http://localhost:8080/api/usuario/5
 Authorization: Bearer {{token}}
