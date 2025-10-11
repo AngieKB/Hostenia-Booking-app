@@ -78,14 +78,24 @@ public class ReservaServiceImpl implements ReservaService {
 
     @Override
     public void editarReserva(Long id, EditarReservaDTO dto) {
+        // Obtener reserva de la base de datos
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe una reserva con el id " + id));
 
+        // Verificar estado de la reserva
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
             throw new InvalidOperationException("No se puede editar una reserva cancelada.");
         }
 
-        // Usar mapper para actualizar los campos del DTO en la entidad existente
+        // Obtener usuario autenticado
+        Usuario usuarioAutenticado = authService.getUsuarioAutenticado();
+
+        // Validar que el usuario pueda editar la reserva
+        if (!reserva.getHuesped().getId().equals(usuarioAutenticado.getId())) {
+            throw new InvalidOperationException("No tienes permisos para editar esta reserva.");
+        }
+
+        // Actualizar campos de la reserva usando el mapper
         reservaMapper.updateReservaFromDTO(dto, reserva);
 
         // Guardar cambios
@@ -94,16 +104,22 @@ public class ReservaServiceImpl implements ReservaService {
 
 
     @Override
-    public List<ReservaUsuarioDTO> obtenerReservasPorIdHuesped(Long id) {
-        List<Reserva> reservas = new ArrayList<>(reservaRepository.findByHuespedId(id));
+    public List<ReservaUsuarioDTO> obtenerMisReservas() {
+        // Obtener usuario autenticado
+        Usuario usuarioAutenticado = authService.getUsuarioAutenticado();
+
+        // Obtener reservas del usuario autenticado
+        List<Reserva> reservas = new ArrayList<>(reservaRepository.findByHuespedId(usuarioAutenticado.getId()));
 
         // Ordenar de más reciente a más antigua
         reservas.sort((r1, r2) -> r2.getFechaCheckIn().compareTo(r1.getFechaCheckIn()));
 
+        // Mapear a DTO
         return reservas.stream()
                 .map(reservaMapper::toUsuarioDTO)
                 .toList();
     }
+
 
     @Override
     public List<ReservaAlojamientoDTO> obtenerReservasPorIdAlojamiento(Long id) {
@@ -120,8 +136,8 @@ public class ReservaServiceImpl implements ReservaService {
     public void guardar(RealizarReservaDTO reservadto) throws Exception {
 
         // convertir ids en entidades
-        Usuario huesped = usuarioRepository.findById(reservadto.huespedId())
-                .orElseThrow(() -> new ResourceNotFoundException("No existe huésped con id " + reservadto.huespedId()));
+        Usuario huesped = usuarioRepository.findById(authService.getUsuarioAutenticado().getId())
+                .orElseThrow(() -> new ResourceNotFoundException("No existe huésped con id " + authService.getUsuarioAutenticado().getId()));
         Alojamiento alojamiento = alojamientoRepository.findById(reservadto.alojamientoId())
                 .orElseThrow(() -> new ResourceNotFoundException("No existe alojamiento con id " + reservadto.alojamientoId()));
         if(reservadto.fechaCheckIn().isBefore(LocalDateTime.now()) || reservadto.fechaCheckOut().isBefore(LocalDateTime.now())) {
@@ -136,7 +152,6 @@ public class ReservaServiceImpl implements ReservaService {
         }
         Reserva newReserva = reservaMapper.toEntity(reservadto);
         newReserva.setEstado(EstadoReserva.PENDIENTE);
-        newReserva.setHuesped(huesped);
         newReserva.setAlojamiento(alojamiento);
         newReserva.setHuesped(authService.getUsuarioAutenticado());
 

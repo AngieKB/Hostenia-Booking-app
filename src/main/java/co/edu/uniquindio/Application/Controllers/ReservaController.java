@@ -29,10 +29,15 @@ public class ReservaController {
 
     @PreAuthorize("hasRole('HUESPED')")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO<String>> edit(@PathVariable Long id, @Valid @RequestBody EditarReservaDTO reservaDTO, @Valid@RequestBody UbicacionDTO ubicacionDTO) throws Exception{
-        reservaService.editarReserva(id, reservaDTO);
+    public ResponseEntity<ResponseDTO<String>> edit(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody EditarReservaConUbicacionDTO dto) throws Exception {
+
+        reservaService.editarReserva(id, dto.reserva());
+        // si quieres también actualizar ubicación aquí con dto.ubicacion()
         return ResponseEntity.ok(new ResponseDTO<>(false, "La reserva ha sido actualizada"));
     }
+
 
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @DeleteMapping("/{id}")
@@ -53,7 +58,7 @@ public class ReservaController {
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/mis-reservas/{usuarioId}")
     public ResponseEntity<ResponseDTO<List<ReservaUsuarioDTO>>> obtenerMisReservas(@PathVariable Long usuarioId) {
-        List<ReservaUsuarioDTO> reservas = reservaService.obtenerReservasPorIdHuesped(usuarioId);
+        List<ReservaUsuarioDTO> reservas = reservaService.obtenerMisReservas();
         return ResponseEntity.ok(new ResponseDTO<>(false, reservas));
     }
     @PreAuthorize("hasRole('ANFITRION')")

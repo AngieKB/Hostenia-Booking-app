@@ -1,0 +1,55 @@
+### Variables de tokens
+@tokenHUESPED = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiOSIsImlhdCI6MTc2MDIyMjQ3NCwiZXhwIjoxNzYwMjI2MDc0fQ.C5fy-jj0ebNf3wKcZO9UVYYmCCzp__NPYXfWzFBziv8
+@tokenANFITRION = <TOKEN_ANFITRION>
+
+###
+
+### Crear Reserva
+POST http://localhost:8080/api/reserva/crear
+Authorization: Bearer {{tokenHUESPED}}
+Content-Type: application/json
+
+{
+  "fechaCheckIn": "2025-10-15T15:00:00",
+  "fechaCheckOut": "2025-10-17T11:00:00",
+  "cantidadHuespedes": 2,
+  "alojamientoId": 10
+}
+
+###
+
+### Editar Reserva
+PUT http://localhost:8080/api/reserva/9
+Authorization: Bearer {{tokenHUESPED}}
+Content-Type: application/json
+
+{
+  "fechaCheckIn": "2025-10-16T15:00:00",
+  "fechaCheckOut": "2025-10-18T11:00:00",
+  "cantidadHuespedes": 3,
+  "total": 300.0
+}
+
+###
+
+### Cancelar Reserva (HUESPED o ANFITRION)
+DELETE http://localhost:8080/api/reserva/5
+Authorization: Bearer {{tokenHUESPED}}
+
+###
+
+### Actualizar Reservas Completadas
+PUT http://localhost:8080/api/reserva/actualizar-completadas
+Authorization: Bearer {{tokenHUESPED}}
+
+###
+
+### Obtener mis reservas (HUESPED)
+GET http://localhost:8080/api/reserva/mis-reservas/1
+Authorization: Bearer {{tokenHUESPED}}
+
+###
+
+### Obtener reservas por alojamiento (ANFITRION)
+GET http://localhost:8080/api/reserva/mis-reservas-aloja/10
+Authorization: Bearer {{tokenANFITRION}}

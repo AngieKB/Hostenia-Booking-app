@@ -8,7 +8,7 @@ import java.util.List;
 public interface ReservaService {
     void guardar(RealizarReservaDTO dto) throws Exception;
     void editarReserva(Long id, EditarReservaDTO dto);
-    List<ReservaUsuarioDTO> obtenerReservasPorIdHuesped(Long id);
+    List<ReservaUsuarioDTO> obtenerMisReservas();
     List<ReservaAlojamientoDTO> obtenerReservasPorIdAlojamiento(Long id);
     void cancelarReserva(Long id);
     EstadoReserva obtenerEstadoReserva(Long id);
