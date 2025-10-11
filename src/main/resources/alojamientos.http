@@ -1,6 +1,9 @@
 @env = local
 @tokenHuesped = <Pega_aquí_tu_token_de_HUESPED>
-@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNhcmxvc0BlbWFpbC5jb20iLCJuYW1lIjoiQ2FybG9zIiwicm9sZSI6IlJPTEVfQU5GSVRSSU9OIiwic3ViIjoiNyIsImlhdCI6MTc2MDIwNTIzMywiZXhwIjoxNzYwMjA4ODMzfQ.BZEpCwxdeIjJ34uOhb2uVUdPc1PEq7fafhVpJFhhUUU
+@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9BTkZJVFJJT04iLCJzdWIiOiI4IiwiaWF0IjoxNzYwMjEyODI3LCJleHAiOjE3NjAyMTY0Mjd9.h4yfEnGQiPqrF09Mkas_L179shQ6Ymm_MQ9vvWkPdZ8
+
+
+
 // ==========================================================
 // ===============  ENDPOINTS DE ALOJAMIENTOS  ==============
 // ==========================================================
@@ -67,7 +70,7 @@ Colombia
 
 // ===================== EDITAR ALOJAMIENTO =====================
 ### Editar alojamiento (ANFITRION)
-PUT http://localhost:8080/api/alojamiento/1
+PUT http://localhost:8080/api/alojamiento/9
 Authorization: Bearer {{tokenAnfitrion}}
 Content-Type: application/json
 
@@ -78,7 +81,9 @@ Content-Type: application/json
     "servicios": ["wifi", "tv", "parqueadero"],
     "galeria": ["https://misimagenes.com/foto1.jpg", "https://misimagenes.com/foto2.jpg"],
     "precioNoche": 250000,
-    "capacidadMax": 5
+    "capacidadMax": 5,
+    "estado": "ACTIVO"
+
   },
   "ubicacionDTO": {
     "direccion": "Calle 11 #22-33",
@@ -97,13 +102,13 @@ Authorization: Bearer {{tokenAnfitrion}}
 
 // ===================== LISTAR POR ANFITRIÓN =====================
 ### Listar alojamientos por anfitrión (ANFITRION)
-GET http://localhost:8080/api/alojamiento/listarPorAnfitrion/1
+GET http://localhost:8080/api/alojamiento/listarPorAnfitrion/4
 Authorization: Bearer {{tokenAnfitrion}}
 
 
 // ===================== OBTENER POR ID =====================
-### Obtener alojamiento por ID (HUESPED o ADMIN)
-GET http://localhost:8080/api/alojamiento/1
+### Obtener alojamiento por ID (HUESPED o ANFITRION)
+GET http://localhost:8080/api/alojamiento/4
 Authorization: Bearer {{tokenHuesped}}
 
 

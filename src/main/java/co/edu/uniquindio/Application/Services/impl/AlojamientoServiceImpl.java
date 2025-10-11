@@ -1,6 +1,7 @@
 package co.edu.uniquindio.Application.Services.impl;
 
 import co.edu.uniquindio.Application.DTO.Alojamiento.*;
+import co.edu.uniquindio.Application.Exceptions.AccessDeniedException;
 import co.edu.uniquindio.Application.Exceptions.InvalidOperationException;
 import co.edu.uniquindio.Application.Exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.Application.Model.*;
@@ -61,15 +62,27 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public void editarAlojamiento(Long id, AlojamientoDTO alojadto, UbicacionDTO ubicaciondto) throws Exception{
+    public void editarAlojamiento(Long id, AlojamientoDTO alojadto, UbicacionDTO ubicaciondto) throws Exception {
         Alojamiento alojamiento = alojamientoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
 
-        // Actualiza los campos usando el mapper
-        alojamientoMapper.updateEntity(alojamiento, alojadto);
+        Usuario usuarioActual = authService.getUsuarioAutenticado();
+
+        if (alojamiento.getAnfitrion() == null ||
+                !alojamiento.getAnfitrion().getUsuario().getId().equals(usuarioActual.getId())) {
+            throw new AccessDeniedException("No tienes permiso para editar este alojamiento.");
+        }
+
+        alojamientoMapper.updateEntity(alojamiento, alojadto, ubicaciondto);
+
+        if (alojadto.estado() == null) {
+            alojamiento.setEstado(alojamiento.getEstado());
+        }
 
         alojamientoRepository.save(alojamiento);
     }
+
+
 
 
     @Override

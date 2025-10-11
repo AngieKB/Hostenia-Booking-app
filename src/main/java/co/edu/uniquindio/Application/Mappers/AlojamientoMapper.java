@@ -3,6 +3,7 @@ package co.edu.uniquindio.Application.Mappers;
 import co.edu.uniquindio.Application.DTO.Alojamiento.AlojamientoDTO;
 import co.edu.uniquindio.Application.DTO.Alojamiento.CrearAlojamientoDTO;
 import co.edu.uniquindio.Application.DTO.Alojamiento.ResumenAlojamientoDTO;
+import co.edu.uniquindio.Application.DTO.Alojamiento.UbicacionDTO;
 import co.edu.uniquindio.Application.Model.Alojamiento;
 import co.edu.uniquindio.Application.Model.Ubicacion;
 import org.mapstruct.Mapper;
@@ -33,31 +34,37 @@ public interface AlojamientoMapper {
         }
         return null;
     }
-    // NUEVO: Actualiza una entidad existente con un DTO
-    default void updateEntity(Alojamiento entity, AlojamientoDTO dto) {
-        if(dto == null || entity == null) return;
+    // NUEVO: Actualiza una entidad existente con los DTO separados
+    default void updateEntity(Alojamiento entity, AlojamientoDTO dto, UbicacionDTO ubicacionDTO) {
+        if (entity == null || dto == null) return;
 
         entity.setTitulo(dto.titulo());
         entity.setDescripcion(dto.descripcion());
         entity.setCapacidadMax(dto.capacidadMax());
         entity.setPrecioNoche(dto.precioNoche());
         entity.setServicios(dto.servicios());
+        entity.setGaleria(dto.galeria());
         entity.setEstado(dto.estado());
 
-        if(entity.getUbicacion() == null) {
-            entity.setUbicacion(new Ubicacion(
-                    dto.ubicacion().direccion(),
-                    dto.ubicacion().ciudad(),
-                    dto.ubicacion().pais(),
-                    dto.ubicacion().latitud(),
-                    dto.ubicacion().longitud()
-            ));
-        } else {
-            entity.getUbicacion().setDireccion(dto.ubicacion().direccion());
-            entity.getUbicacion().setCiudad(dto.ubicacion().ciudad());
-            entity.getUbicacion().setPais(dto.ubicacion().pais());
-            entity.getUbicacion().setLatitud(dto.ubicacion().latitud());
-            entity.getUbicacion().setLongitud(dto.ubicacion().longitud());
-        }}
+        // Manejo de la ubicación separada
+        if (ubicacionDTO != null) {
+            if (entity.getUbicacion() == null) {
+                entity.setUbicacion(new Ubicacion(
+                        ubicacionDTO.direccion(),
+                        ubicacionDTO.ciudad(),
+                        ubicacionDTO.pais(),
+                        ubicacionDTO.latitud(),
+                        ubicacionDTO.longitud()
+                ));
+            } else {
+                entity.getUbicacion().setDireccion(ubicacionDTO.direccion());
+                entity.getUbicacion().setCiudad(ubicacionDTO.ciudad());
+                entity.getUbicacion().setPais(ubicacionDTO.pais());
+                entity.getUbicacion().setLatitud(ubicacionDTO.latitud());
+                entity.getUbicacion().setLongitud(ubicacionDTO.longitud());
+            }
+        }
+    }
+
 
 }

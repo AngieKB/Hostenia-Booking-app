@@ -1,5 +1,5 @@
 @env = local
-@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiMiIsImlhdCI6MTc2MDIwNjI5OSwiZXhwIjoxNzYwMjA5ODk5fQ.LQiMWAcrsC2W-95ofXcbcWYGX2IQQ6h-7JsbKgJH-4I
+@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiOCIsImlhdCI6MTc2MDIwODc4OCwiZXhwIjoxNzYwMjEyMzg4fQ.fVDqEBpJtyhjLUuTHBeKiRuZezv7F4VDlDpNdAAcJh0
 //el token se obtiene del login, luego se puede copiar y pegar aquí para usar en las demás peticiones.
 
 ### Crear perfil de anfitrión
@@ -10,7 +10,7 @@ Content-Type: application/json
 {
   "descripcion": "Me encanta recibir huéspedes en mi casa",
   "documentosLegales": [null],
-  "usuarioId": 2
+  "usuarioId": 8
 }
 
 

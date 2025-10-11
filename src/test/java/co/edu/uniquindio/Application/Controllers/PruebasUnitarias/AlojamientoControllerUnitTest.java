@@ -1,10 +1,7 @@
 package co.edu.uniquindio.Application.Controllers.PruebasUnitarias;
 
 import co.edu.uniquindio.Application.Controllers.AlojamientoController;
-import co.edu.uniquindio.Application.DTO.Alojamiento.AlojamientoDTO;
-import co.edu.uniquindio.Application.DTO.Alojamiento.CrearAlojamientoDTO;
-import co.edu.uniquindio.Application.DTO.Alojamiento.ResumenAlojamientoDTO;
-import co.edu.uniquindio.Application.DTO.Alojamiento.UbicacionDTO;
+import co.edu.uniquindio.Application.DTO.Alojamiento.*;
 import co.edu.uniquindio.Application.DTO.ResponseDTO;
 import co.edu.uniquindio.Application.Model.EstadoAlojamiento;
 import co.edu.uniquindio.Application.Services.AlojamientoService;
@@ -77,11 +74,23 @@ class AlojamientoControllerUnitTest {
 
     @Test
     void editarAlojamientoExitoso() throws Exception {
-        ResponseEntity<ResponseDTO<String>> response = alojamientoController.editar(1L, alojamientoDTO, ubicacionDTO);
-        verify(alojamientoService, times(1)).editarAlojamiento(1L, alojamientoDTO, ubicacionDTO);
+        // Crear el DTO combinado
+        EditarAlojamientoRequest request = new EditarAlojamientoRequest(alojamientoDTO, ubicacionDTO);
+
+        // Ejecutar el método del controlador
+        ResponseEntity<ResponseDTO<String>> response = alojamientoController.editar(1L, request);
+
+        // Verificar interacciones con el servicio
+        verify(alojamientoService, times(1))
+                .editarAlojamiento(1L, alojamientoDTO, ubicacionDTO);
+
+        // Verificar respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
         assertFalse(response.getBody().error());
+        assertEquals("El alojamiento ha sido actualizado", response.getBody().content());
     }
+
 
     @Test
     void eliminarAlojamientoExitoso() throws Exception {

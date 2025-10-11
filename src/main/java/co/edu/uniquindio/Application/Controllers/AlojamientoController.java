@@ -2,10 +2,7 @@ package co.edu.uniquindio.Application.Controllers;
 
 
 import co.edu.uniquindio.Application.DTO.*;
-import co.edu.uniquindio.Application.DTO.Alojamiento.AlojamientoDTO;
-import co.edu.uniquindio.Application.DTO.Alojamiento.CrearAlojamientoDTO;
-import co.edu.uniquindio.Application.DTO.Alojamiento.ResumenAlojamientoDTO;
-import co.edu.uniquindio.Application.DTO.Alojamiento.UbicacionDTO;
+import co.edu.uniquindio.Application.DTO.Alojamiento.*;
 import co.edu.uniquindio.Application.Services.AlojamientoService;
 import co.edu.uniquindio.Application.Services.impl.AlojamientoServiceImpl;
 import jakarta.validation.Valid;
@@ -36,10 +33,15 @@ public class AlojamientoController {
 
     @PreAuthorize("hasRole('ANFITRION')")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO<String>> editar(@PathVariable Long id, @Valid @RequestBody AlojamientoDTO alojamientoDTO, @Valid@RequestBody UbicacionDTO ubicacionDTO) throws Exception{
-        alojamientoService.editarAlojamiento(id, alojamientoDTO, ubicacionDTO);
+    public ResponseEntity<ResponseDTO<String>> editar(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody EditarAlojamientoRequest request
+    ) throws Exception {
+
+        alojamientoService.editarAlojamiento(id, request.alojamientoDTO(), request.ubicacionDTO());
         return ResponseEntity.ok(new ResponseDTO<>(false, "El alojamiento ha sido actualizado"));
     }
+
 
     @PreAuthorize("hasRole('ANFITRION')")
     @DeleteMapping("/{id}")
@@ -48,9 +50,9 @@ public class AlojamientoController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseDTO<>(false, "El usuario ha sido eliminado"));
     }
 
-    @PreAuthorize("hasAnyRole('HUESPED', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO<AlojamientoDTO>> obtenerPorId(@PathVariable Long id) throws Exception{
+    public ResponseEntity<ResponseDTO<AlojamientoDTO>> obtenerPorId(@PathVariable("id") Long id) throws Exception{
         return ResponseEntity.ok(new ResponseDTO<>(false, alojamientoService.obtenerPorId(id)));
     }
 
@@ -91,7 +93,7 @@ public class AlojamientoController {
 
     @PreAuthorize("hasRole('ANFITRION')")
     @GetMapping("/listarPorAnfitrion/{idAnfitrion}")
-    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> listarPorAnfitrion(@PathVariable Long idAnfitrion) throws Exception {
+    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> listarPorAnfitrion(@PathVariable("idAnfitrion") Long idAnfitrion) throws Exception {
         List<AlojamientoDTO> list = new ArrayList<>(alojamientoService.listarPorAnfitrion(idAnfitrion));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
