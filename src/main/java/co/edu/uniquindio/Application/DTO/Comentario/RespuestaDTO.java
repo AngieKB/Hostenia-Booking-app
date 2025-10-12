@@ -4,9 +4,8 @@ import java.time.LocalDateTime;
 
 public record RespuestaDTO (
         Long id,
-        Long comentarioId,
-        String texto,
+        Long idComentario,
+        String respuesta,
         LocalDateTime fecha
-        //UsuarioDTO autor
 ) {
 }

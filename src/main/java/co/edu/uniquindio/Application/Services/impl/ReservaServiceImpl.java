@@ -173,8 +173,8 @@ public class ReservaServiceImpl implements ReservaService {
 
         emailService.sendMail(
                 new EmailDTO("Reserva en appBooking de: " + newReserva.getHuesped().getNombre(),
-                        "Su reserva se realizó satisfactoriamente con los siguientes datos. \\nDía de llegada: " + newReserva.getFechaCheckIn()
-                                + "\nDía de salida: " + newReserva.getFechaCheckOut()
+                        "Su reserva se realizó satisfactoriamente con los siguientes datos. \nDía de llegada: " + newReserva.getFechaCheckIn().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+                                + "\nDía de salida: " + newReserva.getFechaCheckOut().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
                                 + "\nCantidad de huéspedes: " + newReserva.getCantidadHuespedes()
                                 + "\nEn el alojamiento: " + newReserva.getAlojamiento().getTitulo()
                                 + "\nPor un total de: " + newReserva.getTotal(),
@@ -182,7 +182,7 @@ public class ReservaServiceImpl implements ReservaService {
         );
         emailService.sendMail(
                 new EmailDTO("Reserva en appBooking de: " + newReserva.getHuesped().getNombre(),
-                        "Una reserva se realizó en el alojamiento " + newReserva.getAlojamiento().getTitulo() + " con los siguientes datos. \\nDía de llegada: " + newReserva.getFechaCheckIn()
+                        "Una reserva se realizó en el alojamiento " + newReserva.getAlojamiento().getTitulo() + " con los siguientes datos. \nDía de llegada: " + newReserva.getFechaCheckIn()
                                 + "\nDía de salida: " + newReserva.getFechaCheckOut()
                                 + "\nCantidad de huéspedes: " + newReserva.getCantidadHuespedes()
                                 + "\nPor un total de: " + newReserva.getTotal(),

@@ -19,7 +19,7 @@ public class Respuesta {
     @Column(length = 20, nullable = false)
     private Long id;
 
-    private String texto;
+    private String respuesta;
 
     private LocalDateTime fecha;
 

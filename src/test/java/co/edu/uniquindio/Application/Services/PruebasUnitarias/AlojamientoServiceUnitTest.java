@@ -55,20 +55,7 @@ class AlojamientoServiceUnitTest {
         MockitoAnnotations.openMocks(this);
 
         ubicacionDTO = new UbicacionDTO("Calle 123", "Bogotá", "Colombia", 4.7, -74.1);
-
-        alojamientoDTO = new AlojamientoDTO(
-                1L,
-                "Hotel Central",
-                "Descripción del hotel",
-                List.of("WiFi", "Piscina"),
-                List.of(),
-                ubicacionDTO,
-                200000.0,
-                4,
-                List.of(),
-                List.of(),
-                EstadoAlojamiento.ACTIVO
-        );
+        
         resumenAlojamientoDTO = new ResumenAlojamientoDTO(
                 1L,
                 "Hotel Central",
@@ -222,7 +209,7 @@ class AlojamientoServiceUnitTest {
         when(alojamientoRepository.findById(1L)).thenReturn(Optional.of(alojamiento));
         when(alojamientoMapper.toDTO(alojamiento)).thenReturn(alojamientoDTO);
 
-        AlojamientoDTO dto = alojamientoService.obtenerPorId(1L);
+        ResumenAlojamientoDTO dto = alojamientoService.obtenerPorId(1L);
 
         assertEquals(alojamientoDTO, dto);
     }
@@ -295,7 +282,7 @@ class AlojamientoServiceUnitTest {
                 .thenReturn(List.of(hotel));
         when(alojamientoMapper.toDTO(hotel)).thenReturn(alojamientoDTO);
 
-        List<AlojamientoDTO> resultados = alojamientoService.buscarPorServicios(servicios);
+        List<ResumenAlojamientoDTO> resultados = alojamientoService.buscarPorServicios(servicios);
 
         assertEquals(1, resultados.size());
         assertEquals(alojamientoDTO, resultados.get(0));

@@ -9,6 +9,6 @@ public record PerfilAnfitrionDTO(
         Long usuarioId,
         String descripcion,
         List<String> domentosLegales,
-        List<AlojamientoDTO> alojamientos
+        List<Long> alojamientos
 ){
 }

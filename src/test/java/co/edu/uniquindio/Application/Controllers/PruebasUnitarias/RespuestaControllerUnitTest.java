@@ -35,7 +35,7 @@ public class RespuestaControllerUnitTest {
 
     @Test
     void testResponderComentario_Exitoso() throws Exception {
-        ResponderDTO responderDTO = new ResponderDTO("Gracias por tu comentario", 1L, 2L);
+        ResponderDTO responderDTO = new ResponderDTO("Gracias por tu comentario", 1L);
 
         doNothing().when(respuestaService).responderComentario(responderDTO);
 
@@ -51,7 +51,7 @@ public class RespuestaControllerUnitTest {
 
     @Test
     void testResponderComentario_Error() throws Exception {
-        ResponderDTO responderDTO = new ResponderDTO("Gracias", 99L, 2L);
+        ResponderDTO responderDTO = new ResponderDTO("Gracias", 99L);
 
         doThrow(new Exception("Comentario no encontrado")).when(respuestaService).responderComentario(any());
 
@@ -74,8 +74,8 @@ public class RespuestaControllerUnitTest {
 
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(Objects.requireNonNull(response.getBody()).error()).isFalse();
-        assertThat(response.getBody().content().comentarioId()).isEqualTo(idComentario);
-        assertThat(response.getBody().content().texto()).isEqualTo("Gracias por hospedarte");
+        assertThat(response.getBody().content().idComentario()).isEqualTo(idComentario);
+        assertThat(response.getBody().content().respuesta()).isEqualTo("Gracias por hospedarte");
 
         verify(respuestaService, times(1)).obtenerRespuestaPorComentario(idComentario);
     }
@@ -105,7 +105,7 @@ public class RespuestaControllerUnitTest {
         assertThat(response.getStatusCode().is2xxSuccessful()).isTrue();
         assertThat(Objects.requireNonNull(response.getBody()).error()).isFalse();
         assertThat(response.getBody().content().id()).isEqualTo(id);
-        assertThat(response.getBody().content().texto()).isEqualTo("Respuesta correcta");
+        assertThat(response.getBody().content().respuesta()).isEqualTo("Respuesta correcta");
 
         verify(respuestaService, times(1)).obtener(id);
     }

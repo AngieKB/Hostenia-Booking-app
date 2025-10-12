@@ -23,7 +23,7 @@ public class PerfilAnfitrionController {
 
     @PreAuthorize("hasRole('ANFITRION')")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO<PerfilAnfitrionDTO>> obtenerPerfil(@PathVariable Long id) {
+    public ResponseEntity<ResponseDTO<PerfilAnfitrionDTO>> obtenerPerfil(@PathVariable("id") Long id) {
         return ResponseEntity.ok(new ResponseDTO<>(false, perfilAnfitrionService.obtenerPerfil(id)));
     }
 
@@ -35,14 +35,14 @@ public class PerfilAnfitrionController {
 
     @PreAuthorize("hasRole('ANFITRION')")
     @PutMapping("/{id}")
-    public ResponseEntity<ResponseDTO<String>> actualizarPerfil(@PathVariable Long id, @Valid @RequestBody EditarAnfitrionDTO dto) {
+    public ResponseEntity<ResponseDTO<String>> actualizarPerfil(@PathVariable("id") Long id, @Valid @RequestBody EditarAnfitrionDTO dto) {
         perfilAnfitrionService.actualizarPerfil(id, dto);
         return ResponseEntity.ok(new ResponseDTO<>(false, "Perfil actualizado exitosamente"));
     }
 
     @PreAuthorize("hasRole('ANFITRION')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<ResponseDTO<String>> eliminarPerfil(@PathVariable Long id) {
+    public ResponseEntity<ResponseDTO<String>> eliminarPerfil(@PathVariable("id") Long id) {
         perfilAnfitrionService.eliminarPerfil(id);
         return ResponseEntity.ok(new ResponseDTO<>(false, "Perfil eliminado exitosamente"));
     }

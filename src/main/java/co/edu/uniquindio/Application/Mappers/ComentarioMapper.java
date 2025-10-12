@@ -10,8 +10,8 @@ import org.mapstruct.MappingConstants;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface ComentarioMapper {
     @Mapping(source = "idAlojamiento", target = "alojamiento.id")
-    @Mapping(source = "idUsuario", target = "huesped.id")
     @Mapping(target = "reserva", ignore = true) // se pasa aparte
+    @Mapping(target = "huesped", ignore = true) // se pasa aparte
     @Mapping(target = "fecha", expression = "java(java.time.LocalDateTime.now())")
     Comentario toEntity(ComentarDTO dto);
     ComentarioDTO toDto(Comentario entity);

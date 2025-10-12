@@ -13,7 +13,5 @@ import java.time.LocalDateTime;
 public record ComentarDTO(
         @NotBlank @Length(max = 200) String texto,
         @NotNull @Max(5) @Min(1) int calificacion,
-        @NotNull LocalDateTime fecha,
-        @NotNull Long idAlojamiento,
-        @NotNull Long idUsuario
-) { }
+        @NotNull Long idAlojamiento
+) {}

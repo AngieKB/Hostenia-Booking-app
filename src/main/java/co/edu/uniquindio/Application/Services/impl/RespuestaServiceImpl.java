@@ -6,10 +6,7 @@ import co.edu.uniquindio.Application.DTO.EmailDTO;
 import co.edu.uniquindio.Application.Exceptions.InvalidOperationException;
 import co.edu.uniquindio.Application.Exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.Application.Mappers.RespuestaMapper;
-import co.edu.uniquindio.Application.Model.Alojamiento;
-import co.edu.uniquindio.Application.Model.Comentario;
-import co.edu.uniquindio.Application.Model.Respuesta;
-import co.edu.uniquindio.Application.Model.Usuario;
+import co.edu.uniquindio.Application.Model.*;
 import co.edu.uniquindio.Application.Repository.ComentarioRepository;
 import co.edu.uniquindio.Application.Repository.RespuestaRepository;
 import co.edu.uniquindio.Application.Repository.UsuarioRepository;
@@ -26,6 +23,7 @@ public class RespuestaServiceImpl implements RespuestaService {
     private final ComentarioRepository comentarioRepository;
     private final UsuarioRepository usuarioRepository;
     private final EmailService emailService;
+    private final AuthService authService;
 
     @Override
     public void responderComentario(ResponderDTO dto) throws Exception {
@@ -34,10 +32,10 @@ public class RespuestaServiceImpl implements RespuestaService {
                 .orElseThrow(() -> new ResourceNotFoundException("El comentario no existe"));
 
         Alojamiento alojamiento = comentario.getAlojamiento();
-        Usuario anfitrion = alojamiento.getAnfitrion().getUsuario();
+        Usuario anfitrion = authService.getUsuarioAutenticado();
 
         // verifificar que el usuario que responde es el anfitrion del alojamiento
-        if(!anfitrion.getId().equals(dto.idAnfitrion())) {
+        if(!anfitrion.getId().equals(alojamiento.getAnfitrion().getUsuario().getId())) {
             throw new InvalidOperationException("Solo el anfitrión del alojamiento puede responder comentarios.");
         }
 
@@ -48,6 +46,7 @@ public class RespuestaServiceImpl implements RespuestaService {
 
         Respuesta respuesta = respuestaMapper.toEntity(dto);
         respuesta.setComentario(comentario);
+        respuesta.setAnfitrion(anfitrion);
         respuestaRepository.save(respuesta);
 
         Usuario huesped = comentario.getReserva().getHuesped();
@@ -56,25 +55,25 @@ public class RespuestaServiceImpl implements RespuestaService {
                 new EmailDTO("Han respondido al comentario que dejaste en el alojamiento: " + comentario.getAlojamiento().getTitulo(),
                         "El anfitrión " + anfitrion.getNombre() +
                         " respondio a tu comentario \n" + comentario.getTexto() +
-                        "\nCon la siguiente respuesta: " + respuesta.getTexto(),
+                        "\nCon la siguiente respuesta: " + respuesta.getRespuesta(),
                         huesped.getEmail())
         );
         emailService.sendMail(
                 new EmailDTO("Has respondido al comentario de: " + huesped.getNombre(),
                         "Has respondio al comentario \n" + comentario.getTexto() +
-                                "\nCon la siguiente respuesta: " + respuesta.getTexto(),
+                                "\nCon la siguiente respuesta: " + respuesta.getRespuesta(),
                         anfitrion.getEmail())
         );
     }
 
     @Override
     public RespuestaDTO obtenerRespuestaPorComentario(Long idComentario) {
-        return respuestaMapper.toDTO(respuestaRepository.findByComentarioId(idComentario));
+        return respuestaMapper.toDto(respuestaRepository.findByComentarioId(idComentario));
     }
 
     @Override
     public RespuestaDTO obtener(Long id) throws Exception {
-        return respuestaMapper.toDTO(
+        return respuestaMapper.toDto(
                 respuestaRepository.findById(id)
                         .orElseThrow(() -> new ResourceNotFoundException("La respuesta no existe"))
         );

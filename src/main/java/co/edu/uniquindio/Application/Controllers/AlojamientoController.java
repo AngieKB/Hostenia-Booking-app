@@ -55,7 +55,7 @@ public class AlojamientoController {
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseDTO<AlojamientoDTO>> obtenerPorId(@PathVariable("id") Long id) throws Exception{
+    public ResponseEntity<ResponseDTO<ResumenAlojamientoDTO>> obtenerPorId(@PathVariable("id") Long id) throws Exception{
         return ResponseEntity.ok(new ResponseDTO<>(false, alojamientoService.obtenerPorId(id)));
     }
 
@@ -103,19 +103,19 @@ public class AlojamientoController {
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/buscar/servicios")
-    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> buscarPorServicios(
+    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> buscarPorServicios(
             @RequestParam("servicios") List<String> servicios) throws Exception {
 
-        List<AlojamientoDTO> list = new ArrayList<>(alojamientoService.buscarPorServicios(servicios));
+        List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.buscarPorServicios(servicios));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 
     @PreAuthorize("hasRole('ANFITRION')")
     @GetMapping("/listarPorAnfitrion/{idAnfitrion}")
-    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> listarPorAnfitrion(
+    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> listarPorAnfitrion(
             @PathVariable("idAnfitrion") Long idAnfitrion) throws Exception {
 
-        List<AlojamientoDTO> list = new ArrayList<>(alojamientoService.listarPorAnfitrion(idAnfitrion));
+        List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.listarPorAnfitrion(idAnfitrion));
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 

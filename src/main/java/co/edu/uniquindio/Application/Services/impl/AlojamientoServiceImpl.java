@@ -57,8 +57,8 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public AlojamientoDTO obtenerPorId(Long id) throws Exception{
-        return alojamientoRepository.findById(id).map(alojamientoMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
+    public ResumenAlojamientoDTO obtenerPorId(Long id) throws Exception{
+        return alojamientoRepository.findById(id).map(alojamientoMapper::toResumenDTO).orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
     }
 
     @Override
@@ -146,8 +146,8 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public List<AlojamientoDTO> listarPorAnfitrion(Long idAnfitrion) {
-        return alojamientoRepository.findByAnfitrionId(idAnfitrion).stream().map(alojamientoMapper::toDTO).toList();
+    public List<ResumenAlojamientoDTO> listarPorAnfitrion(Long idAnfitrion) {
+        return alojamientoRepository.findByAnfitrionId(idAnfitrion).stream().map(alojamientoMapper::toResumenDTO).toList();
     }
 
     @Override
@@ -161,10 +161,10 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public List<AlojamientoDTO> buscarPorServicios(List<String> servicios) {
+    public List<ResumenAlojamientoDTO> buscarPorServicios(List<String> servicios) {
         return alojamientoRepository.findByServicios(servicios, servicios.size())
                 .stream()
-                .map(alojamientoMapper::toDTO)
+                .map(alojamientoMapper::toResumenDTO)
                 .toList();
     }
     @Override

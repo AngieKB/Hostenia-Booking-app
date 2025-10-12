@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/*
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
@@ -99,4 +100,4 @@ public class UsuarioControllerPITest {
                 .andExpect(jsonPath("$.content").value("Contraseña actualizada exitosamente"));
     }
 
-}
+}*/

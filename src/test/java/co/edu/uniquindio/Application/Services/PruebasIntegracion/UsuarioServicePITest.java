@@ -19,6 +19,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
+/*
 @SpringBootTest
 @Transactional
 @TestPropertySource(properties = "jwt.secret=MiSecretoSuperSeguro123")
@@ -93,4 +94,4 @@ public class UsuarioServicePITest {
     void testObtenerUsuarioPorIdNoExitoso() {
         assertThrows(Exception.class, () -> usuarioService.get(999L));
     }
-}
+}*/

@@ -36,8 +36,6 @@ class ComentarioControllerUnitTest {
         comentarDTO = new ComentarDTO(
                 "Excelente alojamiento",
                 5,
-                LocalDateTime.now(),
-                1L,
                 1L
         );
     }

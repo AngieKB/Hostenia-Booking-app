@@ -3,6 +3,7 @@ package co.edu.uniquindio.Application.Services.PruebasUnitarias;
 import co.edu.uniquindio.Application.DTO.Comentario.ComentarDTO;
 import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
 import co.edu.uniquindio.Application.Exceptions.InvalidOperationException;
+import co.edu.uniquindio.Application.Exceptions.NotFoundException;
 import co.edu.uniquindio.Application.Exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.Application.Exceptions.ValidationException;
 import co.edu.uniquindio.Application.Model.Alojamiento;
@@ -14,6 +15,7 @@ import co.edu.uniquindio.Application.Repository.AlojamientoRepository;
 import co.edu.uniquindio.Application.Repository.ComentarioRepository;
 import co.edu.uniquindio.Application.Repository.ReservaRepository;
 import co.edu.uniquindio.Application.Repository.UsuarioRepository;
+import co.edu.uniquindio.Application.Services.impl.AuthService;
 import co.edu.uniquindio.Application.Services.impl.ComentarioServiceImpl;
 import co.edu.uniquindio.Application.Mappers.ComentarioMapper;
 import co.edu.uniquindio.Application.Services.EmailService;
@@ -43,6 +45,7 @@ class ComentarioServiceUnitTest {
     @Mock private AlojamientoRepository alojamientoRepository;
     @Mock private ComentarioMapper comentarioMapper;
     @Mock private EmailService emailService;
+    @Mock private AuthService authService;
 
     @InjectMocks
     private ComentarioServiceImpl comentarioService;
@@ -82,9 +85,7 @@ class ComentarioServiceUnitTest {
         ComentarDTO comentarDTO = new ComentarDTO(
                 "Excelente estancia",
                 5,
-                LocalDateTime.now(),
-                alojamiento.getId(),
-                usuario.getId()
+                alojamiento.getId()
         );
 
         Comentario comentario = new Comentario();
@@ -110,21 +111,19 @@ class ComentarioServiceUnitTest {
         when(comentarioRepository.findByAlojamientoId(alojamiento.getId()))
                 .thenReturn(List.of(comentario));
 
-        // Mock: el usuario existe
-        when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
-
         // Mock: alojamiento guardado correctamente
         when(alojamientoRepository.save(any(Alojamiento.class))).thenReturn(alojamiento);
 
         // Mock: email service (solo se verifica que se invoque)
         doNothing().when(emailService).sendMail(any(EmailDTO.class));
 
+        when(authService.getUsuarioAutenticado()).thenReturn(usuario);
+
         // Ejecución
         assertDoesNotThrow(() -> comentarioService.comentar(reservaId, comentarDTO));
 
         // Verificaciones
         verify(comentarioRepository, times(1)).save(any(Comentario.class));
-        verify(usuarioRepository, times(1)).findById(usuario.getId());
         verify(emailService, times(2)).sendMail(any(EmailDTO.class));
     }
 
@@ -166,9 +165,9 @@ class ComentarioServiceUnitTest {
 
     @Test
     void testCrearComentarioReservaNoExiste() {
-        ComentarDTO dto = new ComentarDTO("No debería guardarse", 4, LocalDateTime.now(), 1L, 1L);
+        ComentarDTO dto = new ComentarDTO("No debería guardarse", 4, 1L);
         when(reservaRepository.findById(999L)).thenReturn(Optional.empty());
-        assertThrows(ResourceNotFoundException.class, () -> comentarioService.comentar(999L, dto));
+        assertThrows(NotFoundException.class, () -> comentarioService.comentar(999L, dto));
     }
 
     @Test
@@ -177,9 +176,10 @@ class ComentarioServiceUnitTest {
         lenient().when(reservaRepository.findById(reserva.getId())).thenReturn(Optional.of(reserva));
         lenient().when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
         lenient().when(alojamientoRepository.findById(alojamiento.getId())).thenReturn(Optional.of(alojamiento));
+        lenient().when(authService.getUsuarioAutenticado()).thenReturn(usuario);
 
         ComentarDTO dto = new ComentarDTO(
-                "Intento antes del checkout", 3, LocalDateTime.now(), alojamiento.getId(), usuario.getId()
+                "Intento antes del checkout", 3, alojamiento.getId()
         );
 
         ValidationException ex = assertThrows(ValidationException.class,
@@ -193,10 +193,12 @@ class ComentarioServiceUnitTest {
         lenient().when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
         lenient().when(alojamientoRepository.findById(alojamiento.getId())).thenReturn(Optional.of(alojamiento));
         lenient().when(comentarioRepository.existsByReservaId(reserva.getId())).thenReturn(true);
+        lenient().when(authService.getUsuarioAutenticado()).thenReturn(usuario);
 
-        ComentarDTO dto = new ComentarDTO("Duplicado", 5, LocalDateTime.now(), alojamiento.getId(), usuario.getId());
+        ComentarDTO dto = new ComentarDTO("Duplicado", 5, alojamiento.getId());
         assertThrows(InvalidOperationException.class, () -> comentarioService.comentar(reserva.getId(), dto));
     }
+
 
     @Test
     void testListarComentariosPorAlojamientoVacio() throws Exception {

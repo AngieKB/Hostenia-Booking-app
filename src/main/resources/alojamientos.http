@@ -1,6 +1,6 @@
 @env = local
-@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiOSIsImlhdCI6MTc2MDIyMjQ3NCwiZXhwIjoxNzYwMjI2MDc0fQ.C5fy-jj0ebNf3wKcZO9UVYYmCCzp__NPYXfWzFBziv8
-@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwicm9sZSI6IlJPTEVfQU5GSVRSSU9OIiwibmFtZSI6IkFsYmVydG8iLCJzdWIiOiI4IiwiaWF0IjoxNzYwMjE1NzU1LCJleHAiOjE3NjAyMTkzNTV9.zLv7_4l8Qg8HOSe-NUb0i30ep0ShQZXNR4TsgZnqANo
+@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNiIsImlhdCI6MTc2MDIzNjE5NywiZXhwIjoxNzYwMjM5Nzk3fQ.G4Ntwh9_uTIUjFvvwtKX7-2SxKXxgUhZewljzeIH47o"
+@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9BTkZJVFJJT04iLCJzdWIiOiI3IiwiaWF0IjoxNzYwMjM1OTU1LCJleHAiOjE3NjAyMzk1NTV9.YfcWwuo5o7eIdKy78oIhsoy28sGP2JAWtsFZ5nUNqS8"
 // ==========================================================
 // ===============  ENDPOINTS DE ALOJAMIENTOS  ==============
 // ==========================================================
@@ -107,13 +107,13 @@ Authorization: Bearer {{tokenAnfitrion}}
 
 // ===================== LISTAR POR ANFITRIÓN =====================
 ### Listar alojamientos por anfitrión (ANFITRION)
-GET http://localhost:8080/api/alojamiento/listarPorAnfitrion/4
+GET http://localhost:8080/api/alojamiento/listarPorAnfitrion/1
 Authorization: Bearer {{tokenAnfitrion}}
 
 
 // ===================== OBTENER POR ID =====================
 ### Obtener alojamiento por ID (HUESPED o ANFITRION)
-GET http://localhost:8080/api/alojamiento/9
+GET http://localhost:8080/api/alojamiento/1
 Authorization: Bearer {{tokenHuesped}}
 
 
@@ -151,12 +151,12 @@ Authorization: Bearer {{tokenHuesped}}
 
 // Agregar a favoritos
 ### Agregar un alojamiento a favoritos (HUESPED)
-POST http://localhost:8080/api/alojamiento/favoritos/9
+POST http://localhost:8080/api/alojamiento/favoritos/1
 Authorization: Bearer {{tokenHuesped}}
 
 // Quitar de favoritos
 ### Quitar un alojamiento de favoritos (HUESPED)
-DELETE http://localhost:8080/api/alojamiento/favoritos/9
+DELETE http://localhost:8080/api/alojamiento/favoritos/1
 Authorization: Bearer {{tokenHuesped}}
 
 // Listar favoritos
@@ -166,5 +166,5 @@ Authorization: Bearer {{tokenHuesped}}
 
 // Contar favoritos
 ### Contar cuántos usuarios tienen un alojamiento como favorito (HUESPED)
-GET http://localhost:8080/api/alojamiento/9/favorito/count
+GET http://localhost:8080/api/alojamiento/1/favorito/count
 Authorization: Bearer {{tokenHuesped}}

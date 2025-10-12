@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-
+/*
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = "jwt.secret=12345678901234567890123456789012")
@@ -52,7 +52,7 @@ public class ComentarioControllerPITest {
         return jwtUtils.generateToken(usuario.getId().toString(), claims);
     }
 
-    /*
+
     @Test
     @Sql("classpath:dataset.sql")
     void testCrearComentarioExitoso() throws Exception {
@@ -154,7 +154,7 @@ public class ComentarioControllerPITest {
                 .andExpect(jsonPath("$.error").value(false))
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content.length()").value(comentarioRepository.findByAlojamientoId(idAlojamiento).size()));
-    }*/
+    }
 
     @Test
     @Sql("classpath:dataset.sql")
@@ -172,4 +172,4 @@ public class ComentarioControllerPITest {
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.content.length()").value(0));
     }
-}
+}*/

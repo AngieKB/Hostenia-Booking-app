@@ -49,9 +49,7 @@ public class ComentarioServicePITest {
         var dto = new ComentarDTO(
                 "Muy buena experiencia",
                 5,
-                LocalDateTime.now(),
-                reserva.getAlojamiento().getId(),
-                usuario.getId()
+                reserva.getAlojamiento().getId()
         );
 
         assertDoesNotThrow(() -> comentarioService.comentar(reserva.getId(), dto));
@@ -76,8 +74,6 @@ public class ComentarioServicePITest {
         var dto = new ComentarDTO(
                 "No debería guardarse",
                 4,
-                LocalDateTime.now(),
-                1L,
                 1L
         );
 
@@ -112,9 +108,7 @@ public class ComentarioServicePITest {
         var dto = new ComentarDTO(
                 "Comentario duplicado",
                 5,
-                LocalDateTime.now(),
-                reserva.getAlojamiento().getId(),
-                usuario.getId()
+                reserva.getAlojamiento().getId()
         );
 
         assertThrows(InvalidOperationException.class, () -> comentarioService.comentar(reserva.getId(), dto));

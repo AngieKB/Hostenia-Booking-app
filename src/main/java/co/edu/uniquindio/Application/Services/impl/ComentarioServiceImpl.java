@@ -4,6 +4,7 @@ import co.edu.uniquindio.Application.DTO.Comentario.ComentarDTO;
 import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
 import co.edu.uniquindio.Application.DTO.EmailDTO;
 import co.edu.uniquindio.Application.Exceptions.InvalidOperationException;
+import co.edu.uniquindio.Application.Exceptions.NotFoundException;
 import co.edu.uniquindio.Application.Exceptions.ResourceNotFoundException;
 import co.edu.uniquindio.Application.Exceptions.ValidationException;
 import co.edu.uniquindio.Application.Model.*;
@@ -30,16 +31,19 @@ public class ComentarioServiceImpl implements ComentarioService {
     private final AlojamientoRepository alojamientoRepository;
     private final EmailService emailService;
     private final UsuarioRepository usuarioRepository;
+    private final AuthService authService;
 
 
     @Override
     public void comentar(Long reservaId, ComentarDTO comentarDTO) throws Exception {
+        Usuario usuario = authService.getUsuarioAutenticado();
+
         // 1. Buscar la reserva
         Reserva reserva = reservaRepository.findById(reservaId)
-                .orElseThrow(() -> new ResourceNotFoundException("La reserva no existe"));
+                .orElseThrow(() -> new NotFoundException("La reserva no existe"));
 
         // 2. Validar que pertenezca al huésped y al alojamiento correctos
-        if (!reserva.getHuesped().getId().equals(comentarDTO.idUsuario()) ||
+        if (!reserva.getHuesped().getId().equals(usuario.getId()) ||
                 !reserva.getAlojamiento().getId().equals(comentarDTO.idAlojamiento())) {
             throw new InvalidOperationException("La reserva no corresponde al usuario o al alojamiento indicado");
         }
@@ -56,6 +60,7 @@ public class ComentarioServiceImpl implements ComentarioService {
 
         // 5. Crear y guardar comentario
         Comentario comentario = comentarioMapper.toEntity(comentarDTO);
+        comentario.setHuesped(usuario);
         comentario.setReserva(reserva);
         comentarioRepository.save(comentario);
 
@@ -68,7 +73,8 @@ public class ComentarioServiceImpl implements ComentarioService {
                 .average()
                 .orElse(0);
 
-        Usuario usuario = usuarioRepository.findById(comentarDTO.idUsuario()).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+//        Usuario usuario = usuarioRepository.findById(comentarDTO.idUsuario()).orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
+
 
         alojamiento.setCalificacionPromedio(promedio);
         alojamientoRepository.save(alojamiento);

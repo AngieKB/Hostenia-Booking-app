@@ -60,11 +60,7 @@ class AlojamientoControllerUnitTest {
                 "Bogotá D.C.", "Calle 123", 4.7, -74.1, 150.0, 2, "Colombia"
         );
 
-        // DTO que devuelve el service (URLs)
-        alojamientoDTO = new AlojamientoDTO(
-                1L, "Hotel Test", "Descripción del hotel", List.of("WiFi", "Piscina"), galeriaUrls,
-                ubicacionDTO, 150.0, 2, List.of(), List.of(), EstadoAlojamiento.ACTIVO
-        );
+
 
         resumenDTO = new ResumenAlojamientoDTO(
                 1L, "Hotel Test", "Bogotá D.C.", 150.0, 4.5, "url1.jpg"
@@ -110,10 +106,10 @@ class AlojamientoControllerUnitTest {
 
     @Test
     void obtenerPorIdExitoso() throws Exception {
-        when(alojamientoService.obtenerPorId(1L)).thenReturn(alojamientoDTO);
-        ResponseEntity<ResponseDTO<AlojamientoDTO>> response = alojamientoController.obtenerPorId(1L);
+        when(alojamientoService.obtenerPorId(1L)).thenReturn(resumenDTO);
+        ResponseEntity<ResponseDTO<ResumenAlojamientoDTO>> response = alojamientoController.obtenerPorId(1L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(alojamientoDTO, response.getBody().content());
+        assertEquals(resumenDTO, response.getBody().content());
         verify(alojamientoService, times(1)).obtenerPorId(1L);
     }
 
@@ -187,16 +183,16 @@ class AlojamientoControllerUnitTest {
 
     @Test
     void buscarPorServiciosExitoso() throws Exception {
-        when(alojamientoService.buscarPorServicios(List.of("WiFi", "Piscina"))).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorServicios(List.of("WiFi", "Piscina"));
+        when(alojamientoService.buscarPorServicios(List.of("WiFi", "Piscina"))).thenReturn(List.of(resumenDTO));
+        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.buscarPorServicios(List.of("WiFi", "Piscina"));
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).buscarPorServicios(List.of("WiFi", "Piscina"));
     }
 
     @Test
     void listarPorAnfitrionExitoso() throws Exception {
-        when(alojamientoService.listarPorAnfitrion(1L)).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.listarPorAnfitrion(1L);
+        when(alojamientoService.listarPorAnfitrion(1L)).thenReturn(List.of(resumenDTO));
+        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.listarPorAnfitrion(1L);
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).listarPorAnfitrion(1L);
     }
