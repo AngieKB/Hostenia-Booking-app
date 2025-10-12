@@ -8,6 +8,7 @@ import co.edu.uniquindio.Application.Services.impl.AlojamientoServiceImpl;
 import co.edu.uniquindio.Application.Services.impl.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,6 +64,17 @@ public class AlojamientoController {
     public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> listarTodos() throws Exception {
         List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.listarTodos());
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
+    }
+
+    @PreAuthorize("hasRole('ANFITRION')")
+    @GetMapping("/{id}/metricas")
+    public ResponseEntity<ResponseDTO<MetricasDTO>> verMetricas(
+            @PathVariable("id") Long id,
+            @RequestParam("fechaMin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaMin,
+            @RequestParam("fechaMax") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaMax
+    ) throws Exception {
+        MetricasDTO metricas = alojamientoService.verMetricas(id, fechaMin, fechaMax);
+        return ResponseEntity.ok(new ResponseDTO<>(false, metricas));
     }
 
     @PreAuthorize("hasRole('HUESPED')")

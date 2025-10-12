@@ -37,9 +37,16 @@ class AlojamientoControllerUnitTest {
     private ResumenAlojamientoDTO resumenDTO;
     private List<MultipartFile> galeriaMultipart;
     private List<String> galeriaUrls;
+    private LocalDateTime fechaMin;
+    private LocalDateTime fechaMax;
+    private MetricasDTO metricasDTO;
+
 
     @BeforeEach
     void setUp() {
+         fechaMin = LocalDateTime.now().minusDays(10);
+         fechaMax = LocalDateTime.now();
+         metricasDTO = new MetricasDTO(3.0, 50);
         // Ubicación
         ubicacionDTO = new UbicacionDTO("Calle 123", "Bogotá D.C.", "Colombia", 4.7, -74.1);
 
@@ -63,6 +70,7 @@ class AlojamientoControllerUnitTest {
                 1L, "Hotel Test", "Bogotá D.C.", 150.0, 4.5, "url1.jpg"
         );
     }
+
 
     @Test
     void crearAlojamientoExitoso() throws Exception {
@@ -109,6 +117,39 @@ class AlojamientoControllerUnitTest {
         verify(alojamientoService, times(1)).obtenerPorId(1L);
     }
 
+    @Test
+    void verMetricasExitosa() throws Exception {
+        // Arrange
+        Long idAlojamiento = 1L;
+        when(alojamientoService.verMetricas(idAlojamiento, fechaMin, fechaMax))
+                .thenReturn(metricasDTO);
+
+        // Act
+        ResponseEntity<ResponseDTO<MetricasDTO>> response =
+                alojamientoController.verMetricas(idAlojamiento, fechaMin, fechaMax);
+
+        // Assert
+        assertNotNull(response);
+        assertEquals(200, response.getStatusCodeValue());
+        assertFalse(response.getBody().error());
+        assertEquals(metricasDTO, response.getBody().content());
+        verify(alojamientoService, times(1)).verMetricas(idAlojamiento, fechaMin, fechaMax);
+    }
+
+    @Test
+    void verMetricasAlojamientoNoExiste() throws Exception {
+        // Arrange
+        Long idAlojamiento = 99L;
+        when(alojamientoService.verMetricas(idAlojamiento, fechaMin, fechaMax))
+                .thenThrow(new RuntimeException("Alojamiento no encontrado"));
+
+        // Act & Assert
+        Exception ex = assertThrows(RuntimeException.class, () ->
+                alojamientoController.verMetricas(idAlojamiento, fechaMin, fechaMax)
+        );
+        assertEquals("Alojamiento no encontrado", ex.getMessage());
+        verify(alojamientoService, times(1)).verMetricas(idAlojamiento, fechaMin, fechaMax);
+    }
     @Test
     void listarTodosExitoso() throws Exception {
         when(alojamientoService.listarTodos()).thenReturn(List.of(resumenDTO));
