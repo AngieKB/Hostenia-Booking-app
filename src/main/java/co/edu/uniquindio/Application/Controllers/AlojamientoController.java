@@ -60,8 +60,8 @@ public class AlojamientoController {
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping
-    public ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> listarTodos() throws Exception {
-        List<AlojamientoDTO> list = new ArrayList<>(alojamientoService.listarTodos());
+    public ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> listarTodos() throws Exception {
+        List<ResumenAlojamientoDTO> list = new ArrayList<>(alojamientoService.listarTodos());
         return ResponseEntity.ok(new ResponseDTO<>(false, list));
     }
 

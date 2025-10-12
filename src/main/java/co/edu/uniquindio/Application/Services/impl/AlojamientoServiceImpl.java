@@ -86,8 +86,8 @@ public class AlojamientoServiceImpl implements AlojamientoService {
 
 
     @Override
-    public List<AlojamientoDTO> listarTodos() {
-        return alojamientoRepository.findAll().stream().map(alojamientoMapper::toDTO).toList() ;
+    public List<ResumenAlojamientoDTO> listarTodos() {
+        return alojamientoRepository.findAll().stream().map(alojamientoMapper::toResumenDTO).toList() ;
     }
 
     @Override

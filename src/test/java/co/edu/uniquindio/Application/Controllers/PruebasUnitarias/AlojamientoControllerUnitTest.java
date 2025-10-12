@@ -111,8 +111,8 @@ class AlojamientoControllerUnitTest {
 
     @Test
     void listarTodosExitoso() throws Exception {
-        when(alojamientoService.listarTodos()).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.listarTodos();
+        when(alojamientoService.listarTodos()).thenReturn(List.of(resumenDTO));
+        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.listarTodos();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).listarTodos();
