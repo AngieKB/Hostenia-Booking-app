@@ -57,8 +57,8 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public ResumenAlojamientoDTO obtenerPorId(Long id) throws Exception{
-        return alojamientoRepository.findById(id).map(alojamientoMapper::toResumenDTO).orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
+    public AlojamientoDTO obtenerPorId(Long id) throws Exception{
+        return alojamientoRepository.findById(id).map(alojamientoMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
     }
 
     @Override
@@ -86,8 +86,8 @@ public class AlojamientoServiceImpl implements AlojamientoService {
 
 
     @Override
-    public List<ResumenAlojamientoDTO> listarTodos() {
-        return alojamientoRepository.findAll().stream().map(alojamientoMapper::toResumenDTO).toList() ;
+    public List<AlojamientoDTO> listarTodos() {
+        return alojamientoRepository.findAll().stream().map(alojamientoMapper::toDTO).toList() ;
     }
 
     @Override
@@ -141,30 +141,30 @@ public class AlojamientoServiceImpl implements AlojamientoService {
 
 
     @Override
-    public List<ResumenAlojamientoDTO> buscarPorCiudad(String ciudad) {
-        return alojamientoRepository.findByUbicacionCiudadContainingIgnoreCaseAndEstado(ciudad,ACTIVO).stream().map(alojamientoMapper::toResumenDTO).toList();
+    public List<AlojamientoDTO> buscarPorCiudad(String ciudad) {
+        return alojamientoRepository.findByUbicacionCiudadContainingIgnoreCaseAndEstado(ciudad,ACTIVO).stream().map(alojamientoMapper::toDTO).toList();
     }
 
     @Override
-    public List<ResumenAlojamientoDTO> listarPorAnfitrion(Long idAnfitrion) {
-        return alojamientoRepository.findByAnfitrionId(idAnfitrion).stream().map(alojamientoMapper::toResumenDTO).toList();
+    public List<AlojamientoDTO> listarPorAnfitrion(Long idAnfitrion) {
+        return alojamientoRepository.findByAnfitrionId(idAnfitrion).stream().map(alojamientoMapper::toDTO).toList();
     }
 
     @Override
-    public List<ResumenAlojamientoDTO> buscarPorPrecio(double min, double max) {
-        return alojamientoRepository.findByPrecioNocheBetweenAndEstado(min,max,ACTIVO).stream().map(alojamientoMapper::toResumenDTO).toList();
+    public List<AlojamientoDTO> buscarPorPrecio(double min, double max) {
+        return alojamientoRepository.findByPrecioNocheBetweenAndEstado(min,max,ACTIVO).stream().map(alojamientoMapper::toDTO).toList();
     }
 
     @Override
-    public List<ResumenAlojamientoDTO> buscarPorFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
-        return alojamientoRepository.findByDate(fechaInicio,fechaFin,ACTIVO).stream().map(alojamientoMapper::toResumenDTO).toList();
+    public List<AlojamientoDTO> buscarPorFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        return alojamientoRepository.findByDate(fechaInicio,fechaFin,ACTIVO).stream().map(alojamientoMapper::toDTO).toList();
     }
 
     @Override
-    public List<ResumenAlojamientoDTO> buscarPorServicios(List<String> servicios) {
+    public List<AlojamientoDTO> buscarPorServicios(List<String> servicios) {
         return alojamientoRepository.findByServicios(servicios, servicios.size())
                 .stream()
-                .map(alojamientoMapper::toResumenDTO)
+                .map(alojamientoMapper::toDTO)
                 .toList();
     }
     @Override
@@ -196,12 +196,12 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public List<ResumenAlojamientoDTO> listarFavoritos(Long usuarioId) throws Exception{
+    public List<AlojamientoDTO> listarFavoritos(Long usuarioId) throws Exception{
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
         return usuario.getFavoritos().stream()
-                .map(alojamientoMapper::toResumenDTO)
+                .map(alojamientoMapper::toDTO)
                 .toList();
     }
 

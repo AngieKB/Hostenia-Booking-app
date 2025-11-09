@@ -3,6 +3,7 @@ package co.edu.uniquindio.Application.DTO.Alojamiento;
 import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
 import co.edu.uniquindio.Application.DTO.Reserva.ReservaDTO;
 import co.edu.uniquindio.Application.Model.EstadoAlojamiento;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ public record AlojamientoDTO (
     String titulo,
     String descripcion,
     List<String> servicios,
-    List<String> galeria,
+    List<MultipartFile> galeria,
     UbicacionDTO ubicacion,
     Double precioNoche,
     Integer capacidadMax,

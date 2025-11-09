@@ -2,9 +2,13 @@ package co.edu.uniquindio.Application.Controllers.PruebasUnitarias;
 
 import co.edu.uniquindio.Application.Controllers.AlojamientoController;
 import co.edu.uniquindio.Application.DTO.Alojamiento.*;
+import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
+import co.edu.uniquindio.Application.DTO.Reserva.ReservaDTO;
 import co.edu.uniquindio.Application.DTO.ResponseDTO;
 import co.edu.uniquindio.Application.Model.EstadoAlojamiento;
+import co.edu.uniquindio.Application.Model.EstadoReserva;
 import co.edu.uniquindio.Application.Services.AlojamientoService;
+import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,13 +34,12 @@ class AlojamientoControllerUnitTest {
 
     @InjectMocks
     private AlojamientoController alojamientoController;
-
+    private ComentarioDTO comentarioDTO;
+    private ReservaDTO reservaDTO;
     private AlojamientoDTO alojamientoDTO;
     private UbicacionDTO ubicacionDTO;
     private CrearAlojamientoDTO crearAlojamientoDTO;
-    private ResumenAlojamientoDTO resumenDTO;
     private List<MultipartFile> galeriaMultipart;
-    private List<String> galeriaUrls;
     private LocalDateTime fechaMin;
     private LocalDateTime fechaMax;
     private MetricasDTO metricasDTO;
@@ -52,7 +55,6 @@ class AlojamientoControllerUnitTest {
 
         // Galería
         galeriaMultipart = List.of(new MockMultipartFile("imagen1", "imagen1.jpg", "image/jpeg", new byte[]{1,2,3}));
-        galeriaUrls = List.of("url1.jpg", "url2.jpg");
 
         // DTO que recibe el controller (multipart)
         crearAlojamientoDTO = new CrearAlojamientoDTO(
@@ -60,10 +62,21 @@ class AlojamientoControllerUnitTest {
                 "Bogotá D.C.", "Calle 123", 4.7, -74.1, 150.0, 2, "Colombia"
         );
 
+        comentarioDTO = new ComentarioDTO(1L, "Escelente atención, increíble", 4, LocalDateTime.now());
+        reservaDTO = new ReservaDTO(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(5), 1, 300.0, EstadoReserva.PENDIENTE);
 
-
-        resumenDTO = new ResumenAlojamientoDTO(
-                1L, "Hotel Test", "Bogotá D.C.", 150.0, 4.5, "url1.jpg"
+        alojamientoDTO = new AlojamientoDTO(
+                1L,
+                "Cabaña en las montañas",
+                "Una cabaña acogedora con vista al bosque y chimenea incluida.",
+                List.of("WiFi", "Chimenea", "Parqueadero", "Cocina equipada"),
+                null,
+                ubicacionDTO,
+                150.00,
+                4,
+                List.of(comentarioDTO),
+                List.of(reservaDTO),
+                EstadoAlojamiento.ACTIVO
         );
     }
 
@@ -106,10 +119,10 @@ class AlojamientoControllerUnitTest {
 
     @Test
     void obtenerPorIdExitoso() throws Exception {
-        when(alojamientoService.obtenerPorId(1L)).thenReturn(resumenDTO);
-        ResponseEntity<ResponseDTO<ResumenAlojamientoDTO>> response = alojamientoController.obtenerPorId(1L);
+        when(alojamientoService.obtenerPorId(1L)).thenReturn(alojamientoDTO);
+        ResponseEntity<ResponseDTO<AlojamientoDTO>> response = alojamientoController.obtenerPorId(1L);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(resumenDTO, response.getBody().content());
+        assertEquals(alojamientoDTO, response.getBody().content());
         verify(alojamientoService, times(1)).obtenerPorId(1L);
     }
 
@@ -148,8 +161,8 @@ class AlojamientoControllerUnitTest {
     }
     @Test
     void listarTodosExitoso() throws Exception {
-        when(alojamientoService.listarTodos()).thenReturn(List.of(resumenDTO));
-        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.listarTodos();
+        when(alojamientoService.listarTodos()).thenReturn(List.of(alojamientoDTO));
+        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.listarTodos();
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).listarTodos();
@@ -157,8 +170,8 @@ class AlojamientoControllerUnitTest {
 
     @Test
     void buscarPorCiudadExitoso() throws Exception {
-        when(alojamientoService.buscarPorCiudad("Bogotá")).thenReturn(List.of(resumenDTO));
-        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.buscarPorCiudad("Bogotá");
+        when(alojamientoService.buscarPorCiudad("Bogotá")).thenReturn(List.of(alojamientoDTO));
+        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorCiudad("Bogotá");
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).buscarPorCiudad("Bogotá");
     }
@@ -167,32 +180,32 @@ class AlojamientoControllerUnitTest {
     void buscarPorFechasExitoso() throws Exception {
         LocalDateTime inicio = LocalDateTime.now();
         LocalDateTime fin = inicio.plusDays(5);
-        when(alojamientoService.buscarPorFechas(inicio, fin)).thenReturn(List.of(resumenDTO));
-        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.buscarPorFechas(inicio, fin);
+        when(alojamientoService.buscarPorFechas(inicio, fin)).thenReturn(List.of(alojamientoDTO));
+        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorFechas(inicio, fin);
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).buscarPorFechas(inicio, fin);
     }
 
     @Test
     void buscarPorPrecioExitoso() throws Exception {
-        when(alojamientoService.buscarPorPrecio(50.0, 200.0)).thenReturn(List.of(resumenDTO));
-        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.buscarPorPrecio(50.0, 200.0);
+        when(alojamientoService.buscarPorPrecio(50.0, 200.0)).thenReturn(List.of(alojamientoDTO));
+        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorPrecio(50.0, 200.0);
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).buscarPorPrecio(50.0, 200.0);
     }
 
     @Test
     void buscarPorServiciosExitoso() throws Exception {
-        when(alojamientoService.buscarPorServicios(List.of("WiFi", "Piscina"))).thenReturn(List.of(resumenDTO));
-        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.buscarPorServicios(List.of("WiFi", "Piscina"));
+        when(alojamientoService.buscarPorServicios(List.of("WiFi", "Piscina"))).thenReturn(List.of(alojamientoDTO));
+        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorServicios(List.of("WiFi", "Piscina"));
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).buscarPorServicios(List.of("WiFi", "Piscina"));
     }
 
     @Test
     void listarPorAnfitrionExitoso() throws Exception {
-        when(alojamientoService.listarPorAnfitrion(1L)).thenReturn(List.of(resumenDTO));
-        ResponseEntity<ResponseDTO<List<ResumenAlojamientoDTO>>> response = alojamientoController.listarPorAnfitrion(1L);
+        when(alojamientoService.listarPorAnfitrion(1L)).thenReturn(List.of(alojamientoDTO));
+        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.listarPorAnfitrion(1L);
         assertEquals(1, response.getBody().content().size());
         verify(alojamientoService, times(1)).listarPorAnfitrion(1L);
     }

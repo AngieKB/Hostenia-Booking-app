@@ -1,6 +1,8 @@
 package co.edu.uniquindio.Application.Services.PruebasUnitarias;
 
 import co.edu.uniquindio.Application.DTO.Alojamiento.*;
+import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
+import co.edu.uniquindio.Application.DTO.Reserva.ReservaDTO;
 import co.edu.uniquindio.Application.Model.*;
 import co.edu.uniquindio.Application.Repository.AlojamientoRepository;
 import co.edu.uniquindio.Application.Repository.PerfilAnfitrionRepository;
@@ -42,11 +44,10 @@ class AlojamientoServiceUnitTest {
     @Mock
     private AuthService authService;
 
-
-
     private Alojamiento alojamiento;
     private AlojamientoDTO alojamientoDTO;
-    private ResumenAlojamientoDTO resumenAlojamientoDTO;
+    private ComentarioDTO comentarioDTO;
+    private ReservaDTO reservaDTO;
     private UbicacionDTO ubicacionDTO;
     private Usuario usuarioFavoritos;
     private Usuario usuarioAnfitrion;
@@ -55,14 +56,22 @@ class AlojamientoServiceUnitTest {
         MockitoAnnotations.openMocks(this);
 
         ubicacionDTO = new UbicacionDTO("Calle 123", "Bogotá", "Colombia", 4.7, -74.1);
-        
-        resumenAlojamientoDTO = new ResumenAlojamientoDTO(
+        comentarioDTO = new ComentarioDTO(1L, "Hermoso lugar, todo muy limpio y tranquilo.", 5, LocalDateTime.of(2025, 3, 15, 14, 30));
+        reservaDTO = new ReservaDTO(1L, 1L, 2L, LocalDateTime.of(2025, 5, 10, 15, 0), LocalDateTime.of(2025, 5, 15, 12, 0),
+                2, 750.00, EstadoReserva.CONFIRMADA);
+
+        alojamientoDTO = new AlojamientoDTO(
                 1L,
-                "Hotel Central",
-                "Bogotá",
-                200000.0,
-                4.0,
-                "http://image.com/img1.jpg"
+                "Cabaña en las montañas",
+                "Una cabaña acogedora con vista al bosque y chimenea incluida.",
+                List.of("WiFi", "Chimenea", "Parqueadero", "Cocina equipada"),
+                null,
+                ubicacionDTO,
+                150.00,
+                4,
+                List.of(comentarioDTO),
+                List.of(reservaDTO),
+                EstadoAlojamiento.ACTIVO
         );
         // Usuario anfitrión
         Usuario anfitrionUsuario = new Usuario();
@@ -209,13 +218,13 @@ class AlojamientoServiceUnitTest {
         when(alojamientoRepository.findById(1L)).thenReturn(Optional.of(alojamiento));
         when(alojamientoMapper.toDTO(alojamiento)).thenReturn(alojamientoDTO);
 
-        ResumenAlojamientoDTO dto = alojamientoService.obtenerPorId(1L);
+        AlojamientoDTO dto = alojamientoService.obtenerPorId(1L);
 
         assertEquals(alojamientoDTO, dto);
     }
     @Test
     void buscarPorCiudadPredictiva() {
-        ResumenAlojamientoDTO resumenDTO = mock(ResumenAlojamientoDTO.class);
+        AlojamientoDTO resumenDTO = mock(AlojamientoDTO.class);
 
         // Simular alojamientos que incluyen "Bogotá D.C."
         Alojamiento alojamientoBogotaDC = new Alojamiento();
@@ -224,9 +233,9 @@ class AlojamientoServiceUnitTest {
 
         when(alojamientoRepository.findByUbicacionCiudadContainingIgnoreCaseAndEstado("Bogotá", EstadoAlojamiento.ACTIVO))
                 .thenReturn(List.of(alojamientoBogotaDC));
-        when(alojamientoMapper.toResumenDTO(alojamientoBogotaDC)).thenReturn(resumenDTO);
+        when(alojamientoMapper.toDTO(alojamientoBogotaDC)).thenReturn(resumenDTO);
 
-        List<ResumenAlojamientoDTO> resultados = alojamientoService.buscarPorCiudad("Bogotá");
+        List<AlojamientoDTO> resultados = alojamientoService.buscarPorCiudad("Bogotá");
 
         assertEquals(1, resultados.size());
         assertEquals(resumenDTO, resultados.get(0));
@@ -234,7 +243,7 @@ class AlojamientoServiceUnitTest {
 
     @Test
     void buscarPorFechasDisponible() {
-        ResumenAlojamientoDTO resumenDTO = mock(ResumenAlojamientoDTO.class);
+        AlojamientoDTO resumenDTO = mock(AlojamientoDTO.class);
         LocalDateTime inicio = LocalDateTime.now();
         LocalDateTime fin = inicio.plusDays(5);
 
@@ -245,9 +254,9 @@ class AlojamientoServiceUnitTest {
 
         when(alojamientoRepository.findByDate(inicio, fin, EstadoAlojamiento.ACTIVO))
                 .thenReturn(List.of(disponible));
-        when(alojamientoMapper.toResumenDTO(disponible)).thenReturn(resumenDTO);
+        when(alojamientoMapper.toDTO(disponible)).thenReturn(resumenDTO);
 
-        List<ResumenAlojamientoDTO> resultados = alojamientoService.buscarPorFechas(inicio, fin);
+        List<AlojamientoDTO> resultados = alojamientoService.buscarPorFechas(inicio, fin);
 
         assertEquals(1, resultados.size());
         assertEquals(resumenDTO, resultados.get(0));
@@ -255,7 +264,7 @@ class AlojamientoServiceUnitTest {
 
     @Test
     void buscarPorPrecioRango() {
-        ResumenAlojamientoDTO resumenDTO = mock(ResumenAlojamientoDTO.class);
+        AlojamientoDTO resumenDTO = mock(AlojamientoDTO.class);
 
         Alojamiento hotel = new Alojamiento();
         hotel.setPrecioNoche(150.0);
@@ -263,9 +272,9 @@ class AlojamientoServiceUnitTest {
 
         when(alojamientoRepository.findByPrecioNocheBetweenAndEstado(50.0, 200.0, EstadoAlojamiento.ACTIVO))
                 .thenReturn(List.of(hotel));
-        when(alojamientoMapper.toResumenDTO(hotel)).thenReturn(resumenDTO);
+        when(alojamientoMapper.toDTO(hotel)).thenReturn(resumenDTO);
 
-        List<ResumenAlojamientoDTO> resultados = alojamientoService.buscarPorPrecio(50.0, 200.0);
+        List<AlojamientoDTO> resultados = alojamientoService.buscarPorPrecio(50.0, 200.0);
 
         assertEquals(1, resultados.size());
         assertEquals(resumenDTO, resultados.get(0));
@@ -282,7 +291,7 @@ class AlojamientoServiceUnitTest {
                 .thenReturn(List.of(hotel));
         when(alojamientoMapper.toDTO(hotel)).thenReturn(alojamientoDTO);
 
-        List<ResumenAlojamientoDTO> resultados = alojamientoService.buscarPorServicios(servicios);
+        List<AlojamientoDTO> resultados = alojamientoService.buscarPorServicios(servicios);
 
         assertEquals(1, resultados.size());
         assertEquals(alojamientoDTO, resultados.get(0));
@@ -316,12 +325,12 @@ class AlojamientoServiceUnitTest {
     void listarFavoritos_deberiaDevolverDTOs() throws Exception{
         usuarioFavoritos.getFavoritos().add(alojamiento);
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuarioFavoritos));
-        when(alojamientoMapper.toResumenDTO(alojamiento)).thenReturn(resumenAlojamientoDTO);
+        when(alojamientoMapper.toDTO(alojamiento)).thenReturn(alojamientoDTO);
 
-        List<ResumenAlojamientoDTO> favoritos = alojamientoService.listarFavoritos(1L);
+        List<AlojamientoDTO> favoritos = alojamientoService.listarFavoritos(1L);
 
         assertEquals(1, favoritos.size());
-        assertEquals(resumenAlojamientoDTO, favoritos.get(0));
+        assertEquals(alojamientoDTO, favoritos.get(0));
     }
 
 
