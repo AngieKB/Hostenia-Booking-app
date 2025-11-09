@@ -1,6 +1,6 @@
 @env = local
 @tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNlbGVzdGVzb2ZpYTIwMDdAZ21haWwuY29tIiwibmFtZSI6IkNlbGVzdGUiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNCIsImlhdCI6MTc2MjY2MjA5NCwiZXhwIjoxNzYyNjY1Njk0fQ.1u_NyEiVFi9QTTNISRSt9_i8Cimhk2_ErPacbv3G6Jc
-@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI2NjE3NzUsImV4cCI6MTc2MjY2NTM3NX0.CDHUHa2GyTPWA0Zkk8yLYmP0tik1K5lmNlhbK2uz3YI
+@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI3MTg2NzEsImV4cCI6MTc2MjcyMjI3MX0.6cGOQML_dFXKauwBE16ROIrq0xFELSt7aWpjwtl-oTU
 // ==========================================================
 // ===============  ENDPOINTS DE ALOJAMIENTOS  ==============
 // ==========================================================
@@ -74,7 +74,7 @@ Content-Type: application/json
 
 {
   "alojamientoDTO": {
-    "titulo": "Cabaña actualizada",
+    "titulo": "Cabaña doblemente actualizada",
     "descripcion": "Descripción mejorada del alojamiento.",
     "servicios": ["wifi", "tv", "parqueadero"],
     "galeria": ["http://res.cloudinary.com/dmpiyci78/image/upload/v1762661790/app_name/t49aukhtflhrenecf9iq.jpg"],

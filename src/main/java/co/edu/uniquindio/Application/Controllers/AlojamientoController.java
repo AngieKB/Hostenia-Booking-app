@@ -45,7 +45,6 @@ public class AlojamientoController {
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "El alojamiento ha sido actualizado"));
     }
 
-
     @PreAuthorize("hasRole('ANFITRION')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDTO<String>> eliminar(@PathVariable("id") Long id) throws Exception{

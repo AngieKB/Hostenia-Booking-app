@@ -37,6 +37,7 @@ class AlojamientoControllerUnitTest {
     private ComentarioDTO comentarioDTO;
     private ReservaDTO reservaDTO;
     private AlojamientoDTO alojamientoDTO;
+    private EditarAlojamientoDTO editarAlojamientoDTO;
     private UbicacionDTO ubicacionDTO;
     private CrearAlojamientoDTO crearAlojamientoDTO;
     private List<MultipartFile> galeriaMultipart;
@@ -78,6 +79,19 @@ class AlojamientoControllerUnitTest {
                 List.of(reservaDTO),
                 EstadoAlojamiento.ACTIVO
         );
+
+        editarAlojamientoDTO = new EditarAlojamientoDTO(
+                "Cabaña en las montañas",
+                "Una cabaña acogedora con vista al bosque y chimenea incluida.",
+                List.of("WiFi", "Chimenea", "Parqueadero", "Cocina equipada"),
+                null,
+                "Armenia",
+                "Calle 45 #23-56",
+                23.5667,
+                -87.1234,
+                150000.0,
+                4
+        );
     }
 
 
@@ -92,14 +106,14 @@ class AlojamientoControllerUnitTest {
     @Test
     void editarAlojamientoExitoso() throws Exception {
         // Crear el DTO combinado
-        EditarAlojamientoRequest request = new EditarAlojamientoRequest(alojamientoDTO, ubicacionDTO);
+        EditarAlojamientoRequest request = new EditarAlojamientoRequest(editarAlojamientoDTO, ubicacionDTO);
 
         // Ejecutar el método del controlador
         ResponseEntity<ResponseDTO<String>> response = alojamientoController.editar(1L, request);
 
         // Verificar interacciones con el servicio
         verify(alojamientoService, times(1))
-                .editarAlojamiento(1L, alojamientoDTO, ubicacionDTO);
+                .editarAlojamiento(1L, editarAlojamientoDTO, ubicacionDTO);
 
         // Verificar respuesta
         assertEquals(HttpStatus.OK, response.getStatusCode());

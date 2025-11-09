@@ -46,6 +46,7 @@ class AlojamientoServiceUnitTest {
 
     private Alojamiento alojamiento;
     private AlojamientoDTO alojamientoDTO;
+    private EditarAlojamientoDTO editarAlojamientoDTO;
     private ComentarioDTO comentarioDTO;
     private ReservaDTO reservaDTO;
     private UbicacionDTO ubicacionDTO;
@@ -73,6 +74,19 @@ class AlojamientoServiceUnitTest {
                 List.of(reservaDTO),
                 EstadoAlojamiento.ACTIVO
         );
+        editarAlojamientoDTO = new EditarAlojamientoDTO(
+                "Cabaña en las montañas",
+                "Una cabaña acogedora con vista al bosque y chimenea incluida.",
+                List.of("WiFi", "Chimenea", "Parqueadero", "Cocina equipada"),
+                null,
+                "Armenia",
+                "Calle 45 #23-56",
+                23.5667,
+                -87.1234,
+                150000.0,
+                4
+        );
+
         // Usuario anfitrión
         Usuario anfitrionUsuario = new Usuario();
         anfitrionUsuario.setId(2L);
@@ -156,7 +170,7 @@ class AlojamientoServiceUnitTest {
         when(authService.getUsuarioAutenticado()).thenReturn(alojamiento.getAnfitrion().getUsuario());
 
         // Ejecutar método
-        alojamientoService.editarAlojamiento(alojamiento.getId(), alojamientoDTO, ubicacionDTO);
+        alojamientoService.editarAlojamiento(alojamiento.getId(), editarAlojamientoDTO, ubicacionDTO);
 
         // Verificaciones
         verify(alojamientoMapper, times(1)).updateEntity(alojamiento, alojamientoDTO, ubicacionDTO);

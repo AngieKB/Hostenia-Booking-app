@@ -62,7 +62,7 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public void editarAlojamiento(Long id, AlojamientoDTO alojadto, UbicacionDTO ubicaciondto) throws Exception {
+    public void editarAlojamiento(Long id, EditarAlojamientoDTO alojadto, UbicacionDTO ubicaciondto) throws Exception {
         Alojamiento alojamiento = alojamientoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
 
@@ -74,11 +74,6 @@ public class AlojamientoServiceImpl implements AlojamientoService {
         }
 
         alojamientoMapper.updateEntity(alojamiento, alojadto, ubicaciondto);
-
-        if (alojadto.estado() == null) {
-            alojamiento.setEstado(alojamiento.getEstado());
-        }
-
         alojamientoRepository.save(alojamiento);
     }
 

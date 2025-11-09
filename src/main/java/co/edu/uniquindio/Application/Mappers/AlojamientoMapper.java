@@ -2,6 +2,7 @@ package co.edu.uniquindio.Application.Mappers;
 
 import co.edu.uniquindio.Application.DTO.Alojamiento.AlojamientoDTO;
 import co.edu.uniquindio.Application.DTO.Alojamiento.CrearAlojamientoDTO;
+import co.edu.uniquindio.Application.DTO.Alojamiento.EditarAlojamientoDTO;
 import co.edu.uniquindio.Application.DTO.Alojamiento.UbicacionDTO;
 import co.edu.uniquindio.Application.Model.Alojamiento;
 import co.edu.uniquindio.Application.Model.Ubicacion;
@@ -36,7 +37,7 @@ public interface AlojamientoMapper {
         return null;
     }
     // NUEVO: Actualiza una entidad existente con los DTO separados
-    default void updateEntity(Alojamiento entity, AlojamientoDTO dto, UbicacionDTO ubicacionDTO) {
+    default void updateEntity(Alojamiento entity, EditarAlojamientoDTO dto, UbicacionDTO ubicacionDTO) {
         if (entity == null || dto == null) return;
 
         entity.setTitulo(dto.titulo());
@@ -44,7 +45,6 @@ public interface AlojamientoMapper {
         entity.setCapacidadMax(dto.capacidadMax());
         entity.setPrecioNoche(dto.precioNoche());
         entity.setServicios(dto.servicios());
-        entity.setEstado(dto.estado());
 
         // Manejo de la ubicación separada
         if (ubicacionDTO != null) {
