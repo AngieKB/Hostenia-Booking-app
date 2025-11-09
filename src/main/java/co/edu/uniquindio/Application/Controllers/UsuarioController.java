@@ -5,6 +5,7 @@ import co.edu.uniquindio.Application.DTO.ResponseDTO;
 import co.edu.uniquindio.Application.Services.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,33 +31,33 @@ public class UsuarioController {
     ) throws Exception {
         EditarUsuarioDTO usuarioDTO = new EditarUsuarioDTO(nombre, telefono, fotoUrl);
         usuarioService.edit(id, usuarioDTO);
-        return ResponseEntity.ok(new ResponseDTO<>(false, "El usuario ha sido actualizado"));
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "El usuario ha sido actualizado"));
     }
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDTO<String>> delete(@PathVariable("id") Long id) throws Exception{
         usuarioService.delete(id);
-        return ResponseEntity.ok(new ResponseDTO<>(false, "El usuario ha sido eliminado"));
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "El usuario ha sido eliminado"));
     }
 
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @GetMapping("/{id}")
     public ResponseEntity<ResponseDTO<UsuarioDTO>> get(@PathVariable("id") Long id) throws Exception{
         UsuarioDTO usuarioDTO = usuarioService.get(id);
-        return ResponseEntity.ok(new ResponseDTO<>(false, usuarioDTO));
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), usuarioDTO));
     }
 
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @GetMapping
     public ResponseEntity<ResponseDTO<List<UsuarioDTO>>> listAll(){
         List<UsuarioDTO> list = new ArrayList<>(usuarioService.listAll());
-        return ResponseEntity.ok(new ResponseDTO<>(false, list));
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), list));
     }
 
     @PreAuthorize("hasRole('HUESPED')")
     @PutMapping("/{id}/cambiar-password")
     public ResponseEntity<ResponseDTO<String>> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO, @PathVariable("id") Long id) throws Exception{
         usuarioService.changePassword(id, changePasswordDTO);
-        return ResponseEntity.ok(new ResponseDTO<>(false, "Contraseña actualizada exitosamente"));
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "Contraseña actualizada exitosamente"));
     }
 }

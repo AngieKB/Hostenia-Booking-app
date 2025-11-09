@@ -128,5 +128,5 @@ Content-Type: application/json
 }
 
 ### Eliminar un usuario (cambie "id" por el id del usuario que desea eliminar)
-DELETE http://localhost:8080/api/usuario/5
+DELETE http://localhost:8080/api/usuario/1
 Authorization: Bearer {{token}}

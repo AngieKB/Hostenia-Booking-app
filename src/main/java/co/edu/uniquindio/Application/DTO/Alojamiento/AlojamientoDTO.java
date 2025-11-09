@@ -1,8 +1,8 @@
 package co.edu.uniquindio.Application.DTO.Alojamiento;
 
-import co.edu.uniquindio.Application.Model.Comentario;
+import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
+import co.edu.uniquindio.Application.DTO.Reserva.ReservaDTO;
 import co.edu.uniquindio.Application.Model.EstadoAlojamiento;
-import co.edu.uniquindio.Application.Model.Reserva;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ public record AlojamientoDTO (
     UbicacionDTO ubicacion,
     Double precioNoche,
     Integer capacidadMax,
-    List<Comentario> comentarios,
-    List<Reserva> reservas,
+    List<ComentarioDTO> comentarios,
+    List<ReservaDTO> reservas,
     EstadoAlojamiento estado
 ){
 }

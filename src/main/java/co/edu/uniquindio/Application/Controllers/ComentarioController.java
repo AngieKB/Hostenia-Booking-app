@@ -5,6 +5,7 @@ import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
 import co.edu.uniquindio.Application.DTO.ResponseDTO;
 import co.edu.uniquindio.Application.Services.impl.ComentarioServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +22,12 @@ public class ComentarioController {
     @PostMapping("/{reservaId}")
     public ResponseEntity<ResponseDTO<String>> crearComentario(@PathVariable("reservaId") Long reservaId, @RequestBody ComentarDTO comentarDto) throws Exception{
         comentarioService.comentar(reservaId, comentarDto);
-        return ResponseEntity.ok(new ResponseDTO<>(false, "Comentario creado exitosamente"));
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "Comentario creado exitosamente"));
     }
 
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @GetMapping("/alojamiento/{idAlojamiento}")
     public ResponseEntity<ResponseDTO<List<ComentarioDTO>>> obtenerComentariosPorAlojamiento(@PathVariable("idAlojamiento") Long idAlojamiento) throws Exception{
-        return ResponseEntity.ok(new ResponseDTO<>(false, comentarioService.listarComentariosPorAlojamiento(idAlojamiento)));
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), comentarioService.listarComentariosPorAlojamiento(idAlojamiento)));
     }
 }
