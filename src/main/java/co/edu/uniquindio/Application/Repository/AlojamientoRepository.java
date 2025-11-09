@@ -27,6 +27,7 @@ public interface AlojamientoRepository extends JpaRepository<Alojamiento, Long> 
             "   AND r.fechaCheckIn < :fin " +
             "   AND r.fechaCheckOut > :inicio" +
             ")")
+
     List<Alojamiento> findByDate(
             @Param("inicio") LocalDateTime inicio,
             @Param("fin") LocalDateTime fin,

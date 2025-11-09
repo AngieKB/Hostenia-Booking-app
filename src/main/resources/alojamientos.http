@@ -1,6 +1,6 @@
 @env = local
-@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNiIsImlhdCI6MTc2MDIzNjE5NywiZXhwIjoxNzYwMjM5Nzk3fQ.G4Ntwh9_uTIUjFvvwtKX7-2SxKXxgUhZewljzeIH47o"
-@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9BTkZJVFJJT04iLCJzdWIiOiI3IiwiaWF0IjoxNzYwMjM1OTU1LCJleHAiOjE3NjAyMzk1NTV9.YfcWwuo5o7eIdKy78oIhsoy28sGP2JAWtsFZ5nUNqS8"
+@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNlbGVzdGVzb2ZpYTIwMDdAZ21haWwuY29tIiwibmFtZSI6IkNlbGVzdGUiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNCIsImlhdCI6MTc2MjY2MjA5NCwiZXhwIjoxNzYyNjY1Njk0fQ.1u_NyEiVFi9QTTNISRSt9_i8Cimhk2_ErPacbv3G6Jc
+@tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI2NjE3NzUsImV4cCI6MTc2MjY2NTM3NX0.CDHUHa2GyTPWA0Zkk8yLYmP0tik1K5lmNlhbK2uz3YI
 // ==========================================================
 // ===============  ENDPOINTS DE ALOJAMIENTOS  ==============
 // ==========================================================
@@ -11,71 +11,64 @@
 ### Crear un alojamiento (ANFITRION)
 POST http://localhost:8080/api/alojamiento
 Authorization: Bearer {{tokenAnfitrion}}
-Content-Type: multipart/form-data; boundary=boundary
+Content-Type: multipart/form-data; boundary=WebAppBoundary
 
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="titulo"
 
 Cabaña en la montaña
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="descripcion"
 
 Un hermoso alojamiento con vista al bosque.
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="servicios"
 
 wifi
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="servicios"
 
 jacuzzi
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="galeria"; filename="foto-test.jpg"
 Content-Type: image/jpeg
 
-< ./foto-test.jpg
---boundary
+<@ http://res.cloudinary.com/dmpiyci78/image/upload/v1762662036/app_name/pkb3npmekxbanfr5daex.jpg
+--WebAppBoundary
 Content-Disposition: form-data; name="ciudad"
 
 Medellín
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="direccion"
 
 Calle 10 #23-45
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="latitud"
 
 6.2442
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="longitud"
 
 -75.5812
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="precioNoche"
 
 200000
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="capacidadMax"
 
 4
---boundary
+--WebAppBoundary
 Content-Disposition: form-data; name="pais"
 
 Colombia
---boundary
-Content-Disposition: form-data; name="estado"
-
-ACTIVO
---boundary--
-
-
-
+--WebAppBoundary--
 
 
 
 // ===================== EDITAR ALOJAMIENTO =====================
 ### Editar alojamiento (ANFITRION)
-PUT http://localhost:8080/api/alojamiento/9
+PUT http://localhost:8080/api/alojamiento/1
 Authorization: Bearer {{tokenAnfitrion}}
 Content-Type: application/json
 
@@ -84,7 +77,7 @@ Content-Type: application/json
     "titulo": "Cabaña actualizada",
     "descripcion": "Descripción mejorada del alojamiento.",
     "servicios": ["wifi", "tv", "parqueadero"],
-    "galeria": ["https://misimagenes.com/foto1.jpg", "https://misimagenes.com/foto2.jpg"],
+    "galeria": ["http://res.cloudinary.com/dmpiyci78/image/upload/v1762661790/app_name/t49aukhtflhrenecf9iq.jpg"],
     "precioNoche": 250000,
     "capacidadMax": 5,
     "estado": "ACTIVO"
@@ -107,7 +100,7 @@ Authorization: Bearer {{tokenAnfitrion}}
 
 // ===================== LISTAR POR ANFITRIÓN =====================
 ### Listar alojamientos por anfitrión (ANFITRION)
-GET http://localhost:8080/api/alojamiento/listarPorAnfitrion/1
+GET http://localhost:8080/api/alojamiento/listarPorAnfitrion/5
 Authorization: Bearer {{tokenAnfitrion}}
 
 
@@ -125,7 +118,7 @@ Authorization: Bearer {{tokenHuesped}}
 
 // ===================== BUSCAR POR CIUDAD =====================
 ### Buscar alojamientos por ciudad (HUESPED)
-GET http://localhost:8080/api/alojamiento/buscar/ciudad?ciudad=Medellín
+GET http://localhost:8080/api/alojamiento/buscar/ciudad?ciudad=Armenia
 Authorization: Bearer {{tokenHuesped}}
 
 
@@ -151,7 +144,7 @@ Authorization: Bearer {{tokenHuesped}}
 
 // Agregar a favoritos
 ### Agregar un alojamiento a favoritos (HUESPED)
-POST http://localhost:8080/api/alojamiento/favoritos/1
+POST http://localhost:8080/api/alojamiento/favoritos/2
 Authorization: Bearer {{tokenHuesped}}
 
 // Quitar de favoritos
@@ -166,5 +159,5 @@ Authorization: Bearer {{tokenHuesped}}
 
 // Contar favoritos
 ### Contar cuántos usuarios tienen un alojamiento como favorito (HUESPED)
-GET http://localhost:8080/api/alojamiento/1/favorito/count
+GET http://localhost:8080/api/alojamiento/2/favorito/count
 Authorization: Bearer {{tokenHuesped}}

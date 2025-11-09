@@ -1,6 +1,5 @@
 @env = local
-@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9BTkZJVFJJT04iLCJzdWIiOiI3IiwiaWF0IjoxNzYwMjMyMTg3LCJleHAiOjE3NjAyMzU3ODd9.OcWeTks0dXSK3T7iQNFBYm709-Vg0UvT5M7TCV4rKfw
-# El token se obtiene del login, luego se copia aquí para usar en las demás peticiones.
+@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI2NjQ4NzcsImV4cCI6MTc2MjY2ODQ3N30.QK_O0RABmFAeLJYhZfS_nlB8inj-DH7ndm6sh8FakBg
 
 ### Responder un comentario (solo rol ANFITRION)
 POST http://localhost:8080/api/respuestas
@@ -8,14 +7,14 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "respuesta": "Gracias por tu comentario, espero que vuelvas pronto!",
+  "respuesta": "No concuerdo, pero bueno, no todos pueden tener buenos gustos",
   "idComentario": 2
 }
 
-### Obtener todas las respuestas por comentario (rol ANFITRION o HUESPED)
+### Obtener todas la respuesta por comentario (rol ANFITRION o HUESPED)
 GET http://localhost:8080/api/respuestas/comentario/2
 Authorization: Bearer {{token}}
 
 ### Obtener una respuesta por id (rol ANFITRION o HUESPED)
-GET http://localhost:8080/api/respuestas/1
+GET http://localhost:8080/api/respuestas/2
 Authorization: Bearer {{token}}

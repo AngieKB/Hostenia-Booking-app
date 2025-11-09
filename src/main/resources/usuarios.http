@@ -1,5 +1,5 @@
 @env = local
-@token = pegarToken
+@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI2NTYzMTEsImV4cCI6MTc2MjY1OTkxMX0.qU1whE5Je9L3eIIVkSTgWM3f6kWTs76VOK2mhjoMkZs
 //el token se obtiene del login, luego se puede copiar y pegar aquí para usar en las demás peticiones.
 
 ### Crear un usuario
@@ -9,23 +9,23 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="nombre"
 
-Carlos
+Celeste
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="telefono"
 
-121212
+3207794581
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="email"
 
-angiekaterine0506@gmail.com
+celestesofia2007@gmail.com
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="password"
 
-Carlos123.
+Cc123123
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="fechaNacimiento"
 
-2000-08-22
+2007-11-22
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="fotoUrl"; filename="foto.jpg"
 Content-Type: image/jpeg
@@ -40,23 +40,23 @@ Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0g
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="nombre"
 
-Alberto
+Sofia
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="telefono"
 
-12345677
+3207548156
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="email"
 
-alberto@email.com
+sofia@emial.com
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="password"
 
-Alberto123.
+Sofia123
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="fechaNacimiento"
 
-2000-10-22
+2002-10-22
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="fotoUrl"; filename="foto.jpg"
 Content-Type: image/jpeg
@@ -69,8 +69,8 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "angiekaterine0506@gmail.com",
-  "password": "Carlos123."
+  "email": "celestesofia2007@gmail.com",
+  "password": "Cc123123"
 }
 
 ### Obtener todos los usuarios (requiere token)
@@ -78,22 +78,22 @@ GET http://localhost:8080/api/usuario
 Authorization: Bearer {{token}}
 
 ### Obtener un usuario por id (cambie "id" por el id del usuario que desea obtener)
-GET http://localhost:8080/api/usuario/3
+GET http://localhost:8080/api/usuario/4
 Authorization: Bearer {{token}}
 
 ### Actualizar un usuario (cambie "id" por el id del usuario que desea actualizar)
-PUT http://localhost:8080/api/usuario/3
+PUT http://localhost:8080/api/usuario/4
 Authorization: Bearer {{token}}
 Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="nombre"
 
-Carlos Editado
+Celeste
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="telefono"
 
-32032324
+3207794581
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 
 null
@@ -104,7 +104,7 @@ POST http://localhost:8080/api/auth/forgot-password
 Content-Type: application/json
 
 {
-  "email": "angiekaterine0506@gmail.com"
+  "email": "celestesofia2007@gmail.com"
 }
 
 ### Resetear la contraseña (se pega el codigo de verificación que llega al correo)
@@ -112,19 +112,19 @@ PUT  http://localhost:8080/api/auth/reset-password
 Content-Type: application/json
 
 {
-  "email": "angiekaterine0506@gmail.com",
-  "verificationCode": "428385",
-  "newPassword": "Carlos1234."
+  "email": "celestesofia2007@gmail.com",
+  "verificationCode": "689077",
+  "newPassword": "Cc123124"
 }
 
 ### Cambiar la contraseña actual por una nueva (requiere autenticación)
-PUT http://localhost:8080/api/usuario/5/cambiar-password
+PUT http://localhost:8080/api/usuario/4/cambiar-password
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "oldPassword": "Carlos1234.",
-  "newPassword": "Carlos123."
+  "oldPassword": "Cc123124",
+  "newPassword": "Cc123123"
 }
 
 ### Eliminar un usuario (cambie "id" por el id del usuario que desea eliminar)

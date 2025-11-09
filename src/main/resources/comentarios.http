@@ -1,17 +1,17 @@
 @env = local
-@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFuZ2lla2F0ZXJpbmUwNTA2QGdtYWlsLmNvbSIsIm5hbWUiOiJDYXJsb3MiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNiIsImlhdCI6MTc2MDIyMzUxOSwiZXhwIjoxNzYwMjI3MTE5fQ.waSxsZSHf9ChhnN-7ife9l_4Gl_ZE6H1w_F8YfHTPzQ
+@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNlbGVzdGVzb2ZpYTIwMDdAZ21haWwuY29tIiwibmFtZSI6IkNlbGVzdGUiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNCIsImlhdCI6MTc2MjY2MjA5NCwiZXhwIjoxNzYyNjY1Njk0fQ.1u_NyEiVFi9QTTNISRSt9_i8Cimhk2_ErPacbv3G6Jc
 
 ### Hacer un comentario
-POST http://localhost:8080/api/comentarios/2
+POST http://localhost:8080/api/comentarios/5
 Authorization: Bearer {{token}}
 content-type: application/json
 
 {
-  "texto": "Excelente alojamiento",
-  "calificacion": "4",
-  "idAlojamiento" : 1
+  "texto": "La verdad fue muy sozo y aburrido",
+  "calificacion": "3",
+  "idAlojamiento" : 2
 }
 
 ### Listar comentarios por alojamiento
-GET http://localhost:8080/api/comentarios/alojamiento/1
+GET http://localhost:8080/api/comentarios/alojamiento/2
 Authorization: Bearer {{token}}

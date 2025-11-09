@@ -1,5 +1,5 @@
 @env = local
-@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsYmVydG9AZW1haWwuY29tIiwibmFtZSI6IkFsYmVydG8iLCJyb2xlIjoiUk9MRV9BTkZJVFJJT04iLCJzdWIiOiI3IiwiaWF0IjoxNzYwMjMyMTg3LCJleHAiOjE3NjAyMzU3ODd9.OcWeTks0dXSK3T7iQNFBYm709-Vg0UvT5M7TCV4rKfw
+@token = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI2NTYzMTEsImV4cCI6MTc2MjY1OTkxMX0.qU1whE5Je9L3eIIVkSTgWM3f6kWTs76VOK2mhjoMkZs
 //el token se obtiene del login, luego se puede copiar y pegar aquí para usar en las demás peticiones.
 
 ### Crear perfil de anfitrión
@@ -7,9 +7,9 @@ POST http://localhost:8080/api/auth/host-register
 Content-Type: application/json
 
 {
-  "descripcion": "Me encanta recibir huéspedes en mi casa",
+  "descripcion": "Lugares amenos y confiables para ti",
   "documentosLegales": [null],
-  "usuarioId": 7
+  "usuarioId": 5
 }
 
 ### Login para obtener el token JWT
@@ -17,8 +17,8 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "alberto@email.com",
-  "password": "Alberto123."
+  "email": "sofia@emial.com",
+  "password": "Sofia123"
 }
 
 ### Obtener perfil de anfitrión por Id

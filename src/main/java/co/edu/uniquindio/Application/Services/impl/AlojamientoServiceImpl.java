@@ -43,7 +43,7 @@ public class AlojamientoServiceImpl implements AlojamientoService {
         Alojamiento alojamiento = alojamientoMapper.toEntity(dto);
         Ubicacion ubicacion = alojamientoMapper.crearUbicacion(dto);
         alojamiento.setGaleria(urls);
-        alojamiento.setEstado(ACTIVO);
+        alojamiento.setEstado(EstadoAlojamiento.ACTIVO);
         alojamiento.setUbicacion(ubicacion);
 
         Usuario usuario = authService.getUsuarioAutenticado();

@@ -1,11 +1,6 @@
 ### Variables de tokens
-@tokenHUESPED = eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoiQ2FybG9zIiwicm9sZSI6IlJPTEVfSFVFU1BFRCIsImVtYWlsIjoiYW5naWVrYXRlcmluZTA1MDZAZ21haWwuY29tIiwic3ViIjoiOSIsImlhdCI6MTc2MDIyMjk2MSwiZXhwIjoxNzYwMjI2NTYxfQ.FcbspIbWBo2USNe45aOgrpdzhnum5l-rW5qLdKJGNyE
-
-
-
-
-
-@tokenANFITRION = <TOKEN_ANFITRION>
+@tokenHUESPED = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNlbGVzdGVzb2ZpYTIwMDdAZ21haWwuY29tIiwibmFtZSI6IkNlbGVzdGUiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNCIsImlhdCI6MTc2MjY2MjA5NCwiZXhwIjoxNzYyNjY1Njk0fQ.1u_NyEiVFi9QTTNISRSt9_i8Cimhk2_ErPacbv3G6Jc
+@tokenANFITRION = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI2NjE3NzUsImV4cCI6MTc2MjY2NTM3NX0.CDHUHa2GyTPWA0Zkk8yLYmP0tik1K5lmNlhbK2uz3YI
 
 ###
 
@@ -15,22 +10,22 @@ Authorization: Bearer {{tokenHUESPED}}
 Content-Type: application/json
 
 {
-  "fechaCheckIn": "2025-10-15T15:00:00",
-  "fechaCheckOut": "2025-10-17T11:00:00",
-  "cantidadHuespedes": 2,
-  "alojamientoId": 10
+  "fechaCheckIn": "2025-11-09T15:00:00",
+  "fechaCheckOut": "2025-11-12T11:00:00",
+  "cantidadHuespedes": 4,
+  "alojamientoId": 2
 }
 
 ###
 
 ### Editar Reserva
-PUT http://localhost:8080/api/reserva/7
+PUT http://localhost:8080/api/reserva/2
 Authorization: Bearer {{tokenHUESPED}}
 Content-Type: application/json
 
 {
-  "fechaCheckIn": "2025-10-16T15:00:00",
-  "fechaCheckOut": "2025-10-18T11:00:00",
+  "fechaCheckIn": "2025-11-16T15:00:00",
+  "fechaCheckOut": "2025-11-18T11:00:00",
   "cantidadHuespedes": 3,
   "total": 300.0
 }
@@ -38,7 +33,7 @@ Content-Type: application/json
 ###
 
 ### Cancelar Reserva (HUESPED o ANFITRION)
-DELETE http://localhost:8080/api/reserva/5
+DELETE http://localhost:8080/api/reserva/3
 Authorization: Bearer {{tokenHUESPED}}
 
 ###
@@ -56,5 +51,5 @@ Authorization: Bearer {{tokenHUESPED}}
 ###
 
 ### Obtener reservas por alojamiento (ANFITRION)
-GET http://localhost:8080/api/reserva/mis-reservas-aloja/10
+GET http://localhost:8080/api/reserva/mis-reservas-aloja/2
 Authorization: Bearer {{tokenANFITRION}}
