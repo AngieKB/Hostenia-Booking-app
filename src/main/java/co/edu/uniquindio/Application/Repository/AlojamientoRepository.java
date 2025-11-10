@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface AlojamientoRepository extends JpaRepository<Alojamiento, Long> {
 
-    Page<Alojamiento> findByEstado(EstadoAlojamiento estado);
+    Page<Alojamiento> findByEstado(EstadoAlojamiento estado, Pageable pageable);
     Page<Alojamiento> findByPrecioNocheBetweenAndEstado(Double precioMin, Double precioMax,EstadoAlojamiento estado, Pageable pageable);
     Page<Alojamiento> findByUbicacionCiudadContainingIgnoreCaseAndEstado(String ciudad, EstadoAlojamiento estado, Pageable pageable);
     Page<Alojamiento> findByAnfitrionId(Long id, Pageable pageable);
