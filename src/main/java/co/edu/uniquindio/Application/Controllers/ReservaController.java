@@ -7,6 +7,7 @@ import co.edu.uniquindio.Application.DTO.Usuario.UsuarioDTO;
 import co.edu.uniquindio.Application.Services.impl.ReservaServiceImpl;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,16 +58,22 @@ public class ReservaController {
 
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/mis-reservas")
-    public ResponseEntity<ResponseDTO<List<ReservaUsuarioDTO>>> obtenerMisReservas() {
-        List<ReservaUsuarioDTO> reservas = reservaService.obtenerMisReservas();
+    public ResponseEntity<ResponseDTO<Page<ReservaUsuarioDTO>>> obtenerMisReservas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Page<ReservaUsuarioDTO> reservas = reservaService.obtenerMisReservas(page, size);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), reservas));
     }
 
     @PreAuthorize("hasRole('ANFITRION')")
     @GetMapping("/mis-reservas-aloja/{alojamientoId}")
-    public ResponseEntity<ResponseDTO<List<ReservaAlojamientoDTO>>> obtenerMisReservasPorAlojamiento(@PathVariable("alojamientoId") Long alojamientoId) {
-        List<ReservaAlojamientoDTO> reservas = reservaService.obtenerReservasPorIdAlojamiento(alojamientoId);
+    public ResponseEntity<ResponseDTO<Page<ReservaAlojamientoDTO>>> obtenerMisReservasPorAlojamiento(
+            @PathVariable("alojamientoId") Long alojamientoId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size) {
+
+        Page<ReservaAlojamientoDTO> reservas = reservaService.obtenerReservasPorIdAlojamiento(alojamientoId, page, size);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), reservas));
     }
-
 }

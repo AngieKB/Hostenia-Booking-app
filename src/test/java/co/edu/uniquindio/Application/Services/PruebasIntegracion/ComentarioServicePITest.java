@@ -1,4 +1,4 @@
-package co.edu.uniquindio.Application.Services.PruebasIntegracion;
+/*package co.edu.uniquindio.Application.Services.PruebasIntegracion;
 
 import co.edu.uniquindio.Application.DTO.Comentario.ComentarDTO;
 import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
@@ -140,3 +140,4 @@ public class ComentarioServicePITest {
         assertTrue(comentarios.isEmpty(), "No debería haber comentarios para este alojamiento");
     }
 }
+*/

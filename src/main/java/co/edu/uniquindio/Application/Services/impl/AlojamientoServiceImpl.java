@@ -12,6 +12,10 @@ import co.edu.uniquindio.Application.Services.AlojamientoService;
 import co.edu.uniquindio.Application.Services.ImageService;
 import lombok.RequiredArgsConstructor;
 import co.edu.uniquindio.Application.Mappers.AlojamientoMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -81,8 +85,9 @@ public class AlojamientoServiceImpl implements AlojamientoService {
 
 
     @Override
-    public List<AlojamientoDTO> listarTodos() {
-        return alojamientoRepository.findAll().stream().map(alojamientoMapper::toDTO).toList() ;
+    public Page<AlojamientoDTO> listarTodos(int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
+        return alojamientoRepository.findAll(pageable).map(alojamientoMapper::toDTO);
     }
 
     @Override
@@ -136,32 +141,50 @@ public class AlojamientoServiceImpl implements AlojamientoService {
 
 
     @Override
-    public List<AlojamientoDTO> buscarPorCiudad(String ciudad) {
-        return alojamientoRepository.findByUbicacionCiudadContainingIgnoreCaseAndEstado(ciudad,ACTIVO).stream().map(alojamientoMapper::toDTO).toList();
+    public Page<AlojamientoDTO> buscarPorCiudad(String ciudad, int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
+        return alojamientoRepository.findByUbicacionCiudadContainingIgnoreCaseAndEstado(ciudad, ACTIVO, pageable).map(alojamientoMapper::toDTO);
     }
 
     @Override
-    public List<AlojamientoDTO> listarPorAnfitrion(Long idAnfitrion) {
-        return alojamientoRepository.findByAnfitrionId(idAnfitrion).stream().map(alojamientoMapper::toDTO).toList();
+    public Page<AlojamientoDTO> listarPorAnfitrion(Long idAnfitrion, int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
+        return alojamientoRepository.findByAnfitrionId(idAnfitrion, pageable).map(alojamientoMapper::toDTO);
     }
 
     @Override
-    public List<AlojamientoDTO> buscarPorPrecio(double min, double max) {
-        return alojamientoRepository.findByPrecioNocheBetweenAndEstado(min,max,ACTIVO).stream().map(alojamientoMapper::toDTO).toList();
+    public Page<AlojamientoDTO> buscarPorPrecio(double min, double max, int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
+        return alojamientoRepository.findByPrecioNocheBetweenAndEstado(min,max,ACTIVO, pageable).map(alojamientoMapper::toDTO);
     }
 
     @Override
-    public List<AlojamientoDTO> buscarPorFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
-        return alojamientoRepository.findByDate(fechaInicio,fechaFin,ACTIVO).stream().map(alojamientoMapper::toDTO).toList();
-    }
+    public Page<AlojamientoDTO> buscarPorFechas(LocalDateTime inicio, LocalDateTime fin, int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
 
-    @Override
-    public List<AlojamientoDTO> buscarPorServicios(List<String> servicios) {
-        return alojamientoRepository.findByServicios(servicios, servicios.size())
-                .stream()
+        Page<Alojamiento> alojamientos = alojamientoRepository.findByDate(inicio, fin, EstadoAlojamiento.ACTIVO, pageable);
+
+        // Convertir a DTO
+        List<AlojamientoDTO> dtos = alojamientos.stream()
                 .map(alojamientoMapper::toDTO)
                 .toList();
+
+        // Calcular índices para la sublista paginada
+        int start = Math.min((int) pageable.getOffset(), dtos.size());
+        int end = Math.min((start + pageable.getPageSize()), dtos.size());
+
+        // Crear la página paginada manualmente
+        List<AlojamientoDTO> paginados = dtos.subList(start, end);
+        return new PageImpl<>(paginados, pageable, dtos.size());
     }
+
+    @Override
+    public Page<AlojamientoDTO> buscarPorServicios(List<String> servicios, int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
+        return alojamientoRepository.findByServicios(servicios, servicios.size(), pageable)
+                .map(alojamientoMapper::toDTO);
+    }
+
     @Override
     public void agregarAFavoritos(Long usuarioId, Long alojamientoId) throws Exception{
         Usuario usuario = usuarioRepository.findById(usuarioId)
@@ -191,13 +214,19 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public List<AlojamientoDTO> listarFavoritos(Long usuarioId) throws Exception{
+    public Page<AlojamientoDTO> listarFavoritos(Long usuarioId, int pagina, int tamanio) throws Exception {
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
 
-        return usuario.getFavoritos().stream()
+        List<AlojamientoDTO> listaDTO = usuario.getFavoritos().stream()
                 .map(alojamientoMapper::toDTO)
                 .toList();
+
+        int start = Math.min(pagina * tamanio, listaDTO.size());
+        int end = Math.min(start + tamanio, listaDTO.size());
+
+        return new org.springframework.data.domain.PageImpl<>(listaDTO.subList(start, end),
+                PageRequest.of(pagina, tamanio), listaDTO.size());
     }
 
     @Override
@@ -206,5 +235,11 @@ public class AlojamientoServiceImpl implements AlojamientoService {
                 .orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado"));
 
         return alojamiento.getUsuariosFavoritos().size();
+    }
+
+    public Page<AlojamientoDTO> listarAlojamientosPaginados(int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio); // Página 0, tamaño 9 por ejemplo
+        return alojamientoRepository.findAll(pageable)
+                .map(alojamientoMapper::toDTO); // Convierte entidad a DTO
     }
 }

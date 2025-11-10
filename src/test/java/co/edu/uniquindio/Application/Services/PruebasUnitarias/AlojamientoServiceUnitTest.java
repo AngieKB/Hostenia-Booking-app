@@ -14,6 +14,10 @@ import co.edu.uniquindio.Application.Services.impl.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -173,7 +177,7 @@ class AlojamientoServiceUnitTest {
         alojamientoService.editarAlojamiento(alojamiento.getId(), editarAlojamientoDTO, ubicacionDTO);
 
         // Verificaciones
-        verify(alojamientoMapper, times(1)).updateEntity(alojamiento, alojamientoDTO, ubicacionDTO);
+        verify(alojamientoMapper, times(1)).updateEntity(alojamiento, editarAlojamientoDTO, ubicacionDTO);
         verify(alojamientoRepository, times(1)).save(alojamiento);
     }
 
@@ -240,19 +244,22 @@ class AlojamientoServiceUnitTest {
     void buscarPorCiudadPredictiva() {
         AlojamientoDTO resumenDTO = mock(AlojamientoDTO.class);
 
-        // Simular alojamientos que incluyen "Bogotá D.C."
+        // Simular alojamiento que contiene "Bogotá D.C."
         Alojamiento alojamientoBogotaDC = new Alojamiento();
         alojamientoBogotaDC.setUbicacion(new Ubicacion("Calle 1", "Bogotá D.C.", "Colombia", 4.7, -74.1));
         alojamientoBogotaDC.setEstado(EstadoAlojamiento.ACTIVO);
 
-        when(alojamientoRepository.findByUbicacionCiudadContainingIgnoreCaseAndEstado("Bogotá", EstadoAlojamiento.ACTIVO))
-                .thenReturn(List.of(alojamientoBogotaDC));
+        Pageable pageable = PageRequest.of(0, 9); // página 0, tamaño 9
+        Page<Alojamiento> page = new PageImpl<>(List.of(alojamientoBogotaDC), pageable, 1);
+
+        when(alojamientoRepository.findByUbicacionCiudadContainingIgnoreCaseAndEstado("Bogotá", EstadoAlojamiento.ACTIVO, pageable))
+                .thenReturn(page);
         when(alojamientoMapper.toDTO(alojamientoBogotaDC)).thenReturn(resumenDTO);
 
-        List<AlojamientoDTO> resultados = alojamientoService.buscarPorCiudad("Bogotá");
+        Page<AlojamientoDTO> resultados = alojamientoService.buscarPorCiudad("Bogotá", 0, 9);
 
-        assertEquals(1, resultados.size());
-        assertEquals(resumenDTO, resultados.get(0));
+        assertEquals(1, resultados.getContent().size());
+        assertEquals(resumenDTO, resultados.getContent().get(0));
     }
 
     @Test
@@ -266,14 +273,18 @@ class AlojamientoServiceUnitTest {
         disponible.setReservas(new ArrayList<>());
         disponible.setEstado(EstadoAlojamiento.ACTIVO);
 
-        when(alojamientoRepository.findByDate(inicio, fin, EstadoAlojamiento.ACTIVO))
-                .thenReturn(List.of(disponible));
+        Pageable pageable = PageRequest.of(0, 9);
+        Page<Alojamiento> page = new PageImpl<>(List.of(disponible), pageable, 1);
+
+        when(alojamientoRepository.findByDate(inicio, fin, EstadoAlojamiento.ACTIVO, pageable))
+                .thenReturn(page);
+
         when(alojamientoMapper.toDTO(disponible)).thenReturn(resumenDTO);
 
-        List<AlojamientoDTO> resultados = alojamientoService.buscarPorFechas(inicio, fin);
+        Page<AlojamientoDTO> resultados = alojamientoService.buscarPorFechas(inicio, fin, 0, 9);
 
-        assertEquals(1, resultados.size());
-        assertEquals(resumenDTO, resultados.get(0));
+        assertEquals(1, resultados.getContent().size());
+        assertEquals(resumenDTO, resultados.getContent().get(0));
     }
 
     @Test
@@ -284,14 +295,17 @@ class AlojamientoServiceUnitTest {
         hotel.setPrecioNoche(150.0);
         hotel.setEstado(EstadoAlojamiento.ACTIVO);
 
-        when(alojamientoRepository.findByPrecioNocheBetweenAndEstado(50.0, 200.0, EstadoAlojamiento.ACTIVO))
-                .thenReturn(List.of(hotel));
+        Pageable pageable = PageRequest.of(0, 9);
+        Page<Alojamiento> page = new PageImpl<>(List.of(hotel), pageable, 1);
+
+        when(alojamientoRepository.findByPrecioNocheBetweenAndEstado(50.0, 200.0, EstadoAlojamiento.ACTIVO, pageable))
+                .thenReturn(page);
         when(alojamientoMapper.toDTO(hotel)).thenReturn(resumenDTO);
 
-        List<AlojamientoDTO> resultados = alojamientoService.buscarPorPrecio(50.0, 200.0);
+        Page<AlojamientoDTO> resultados = alojamientoService.buscarPorPrecio(50.0, 200.0, 0, 9);
 
-        assertEquals(1, resultados.size());
-        assertEquals(resumenDTO, resultados.get(0));
+        assertEquals(1, resultados.getContent().size());
+        assertEquals(resumenDTO, resultados.getContent().get(0));
     }
 
     @Test
@@ -301,15 +315,19 @@ class AlojamientoServiceUnitTest {
         hotel.setServicios(List.of("WiFi", "Piscina", "Mascotas"));
         hotel.setEstado(EstadoAlojamiento.ACTIVO);
 
-        when(alojamientoRepository.findByServicios(servicios, servicios.size()))
-                .thenReturn(List.of(hotel));
+        Pageable pageable = PageRequest.of(0, 9);
+        Page<Alojamiento> page = new PageImpl<>(List.of(hotel), pageable, 1);
+
+        when(alojamientoRepository.findByServicios(servicios, servicios.size(), pageable))
+                .thenReturn(page);
         when(alojamientoMapper.toDTO(hotel)).thenReturn(alojamientoDTO);
 
-        List<AlojamientoDTO> resultados = alojamientoService.buscarPorServicios(servicios);
+        Page<AlojamientoDTO> resultados = alojamientoService.buscarPorServicios(servicios, 0, 9);
 
-        assertEquals(1, resultados.size());
-        assertEquals(alojamientoDTO, resultados.get(0));
+        assertEquals(1, resultados.getContent().size());
+        assertEquals(alojamientoDTO, resultados.getContent().get(0));
     }
+
     @Test
     void agregarAFavoritos_deberiaAgregar() throws Exception {
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuarioFavoritos));
@@ -321,6 +339,7 @@ class AlojamientoServiceUnitTest {
         assertTrue(usuarioFavoritos.getFavoritos().contains(alojamiento));
         assertTrue(alojamiento.getUsuariosFavoritos().contains(usuarioFavoritos));
     }
+
     @Test
     void quitarDeFavoritos_deberiaRemover() throws Exception {
         usuarioFavoritos.getFavoritos().add(alojamiento);
@@ -335,18 +354,20 @@ class AlojamientoServiceUnitTest {
         assertFalse(usuarioFavoritos.getFavoritos().contains(alojamiento));
         assertFalse(alojamiento.getUsuariosFavoritos().contains(usuarioFavoritos));
     }
+
     @Test
-    void listarFavoritos_deberiaDevolverDTOs() throws Exception{
+    void listarFavoritos_deberiaDevolverDTOsPaginado() throws Exception {
         usuarioFavoritos.getFavoritos().add(alojamiento);
         when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuarioFavoritos));
         when(alojamientoMapper.toDTO(alojamiento)).thenReturn(alojamientoDTO);
 
-        List<AlojamientoDTO> favoritos = alojamientoService.listarFavoritos(1L);
+        Page<AlojamientoDTO> favoritos = alojamientoService.listarFavoritos(1L, 0, 10);
 
-        assertEquals(1, favoritos.size());
-        assertEquals(alojamientoDTO, favoritos.get(0));
+        assertNotNull(favoritos);
+        assertEquals(1, favoritos.getContent().size());
+        assertEquals(alojamientoDTO, favoritos.getContent().get(0));
+
+        verify(usuarioRepository, times(1)).findById(1L);
+        verify(alojamientoMapper, times(1)).toDTO(alojamiento);
     }
-
-
-
 }

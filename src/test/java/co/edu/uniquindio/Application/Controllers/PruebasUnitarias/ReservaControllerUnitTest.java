@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -175,36 +178,43 @@ class ReservaControllerUnitTest {
     // -------------------- OBTENER RESERVAS POR HUÉSPED --------------------
     @Test
     void obtenerReservasPorHuespedExitosa() {
+        Page<ReservaUsuarioDTO> reservasPage = new PageImpl<>(List.of(reservaUsuarioDTO), PageRequest.of(0, 12), 1);
 
-        when(reservaService.obtenerMisReservas())
-                .thenReturn(List.of(reservaUsuarioDTO));
+        when(reservaService.obtenerMisReservas(0, 12)).thenReturn(reservasPage);
 
-        ResponseEntity<ResponseDTO<List<ReservaUsuarioDTO>>> response =
-                reservaController.obtenerMisReservas();
+        ResponseEntity<ResponseDTO<Page<ReservaUsuarioDTO>>> response =
+                reservaController.obtenerMisReservas(0, 12);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
         assertFalse(response.getBody().error());
-        assertEquals(1, response.getBody().content().size());
-        assertEquals("Alojamiento Playa", response.getBody().content().get(0).alojamientoTitulo());
-        verify(reservaService, times(1)).obtenerMisReservas();
+        assertEquals(1, response.getBody().content().getContent().size());
+        assertEquals("Alojamiento Playa", response.getBody().content().getContent().get(0).alojamientoTitulo());
+
+        verify(reservaService, times(1)).obtenerMisReservas(0, 12);
     }
 
     // -------------------- OBTENER RESERVAS POR ALOJAMIENTO --------------------
     @Test
     void obtenerReservasPorAlojamientoExitosa() {
         Long idAlojamiento = 2L;
-        when(reservaService.obtenerReservasPorIdAlojamiento(idAlojamiento))
-                .thenReturn(List.of(reservaAlojamientoDTO));
+        int page = 0;
+        int size = 12;
 
-        ResponseEntity<ResponseDTO<List<ReservaAlojamientoDTO>>> response =
-                reservaController.obtenerMisReservasPorAlojamiento(idAlojamiento);
+        // Simulamos una página con 1 reserva
+        Page<ReservaAlojamientoDTO> reservasPage = new PageImpl<>(List.of(reservaAlojamientoDTO), PageRequest.of(page, size), 1);
+
+        when(reservaService.obtenerReservasPorIdAlojamiento(idAlojamiento, page, size)).thenReturn(reservasPage);
+
+        ResponseEntity<ResponseDTO<Page<ReservaAlojamientoDTO>>> response =
+                reservaController.obtenerMisReservasPorAlojamiento(idAlojamiento, page, size);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
         assertFalse(response.getBody().error());
-        assertEquals(1, response.getBody().content().size());
-        assertEquals(1L, response.getBody().content().get(0).idHuesped());
-        verify(reservaService, times(1)).obtenerReservasPorIdAlojamiento(idAlojamiento);
+        assertEquals(1, response.getBody().content().getContent().size());
+        assertEquals(1L, response.getBody().content().getContent().get(0).idHuesped());
+
+        verify(reservaService, times(1)).obtenerReservasPorIdAlojamiento(idAlojamiento, page, size);
     }
 }

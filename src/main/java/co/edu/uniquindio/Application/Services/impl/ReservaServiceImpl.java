@@ -17,6 +17,8 @@ import co.edu.uniquindio.Application.Services.EmailService;
 import co.edu.uniquindio.Application.Services.ReservaService;
 import co.edu.uniquindio.Application.Mappers.ReservaMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,34 +117,23 @@ public class ReservaServiceImpl implements ReservaService {
 
 
     @Override
-    public List<ReservaUsuarioDTO> obtenerMisReservas() {
-        // Obtener usuario autenticado
+    public Page<ReservaUsuarioDTO> obtenerMisReservas(int pagina, int tamanio) {
+        Pageable pageable = Pageable.ofSize(tamanio).withPage(pagina);
         Usuario usuarioAutenticado = authService.getUsuarioAutenticado();
 
-        // Obtener reservas del usuario autenticado
-        List<Reserva> reservas = new ArrayList<>(reservaRepository.findByHuespedId(usuarioAutenticado.getId()));
+        Page<Reserva> reservas = reservaRepository.findByHuespedId(usuarioAutenticado.getId(), pageable);
 
-        // Ordenar de más reciente a más antigua
-        reservas.sort((r1, r2) -> r2.getFechaCheckIn().compareTo(r1.getFechaCheckIn()));
-
-        // Mapear a DTO
-        return reservas.stream()
-                .map(reservaMapper::toUsuarioDTO)
-                .toList();
+        return reservas.map(reservaMapper::toUsuarioDTO);
     }
 
 
     @Override
-    public List<ReservaAlojamientoDTO> obtenerReservasPorIdAlojamiento(Long id) {
-        List<Reserva> reservas = new ArrayList<>(reservaRepository.findByAlojamientoId(id));
-
-        // Ordenar de más reciente a más antigua
-        reservas.sort((r1, r2) -> r2.getFechaCheckIn().compareTo(r1.getFechaCheckIn()));
-
-        return reservas.stream()
-                .map(reservaMapper::toAlojamientoDTO)
-                .toList();
+    public Page<ReservaAlojamientoDTO> obtenerReservasPorIdAlojamiento(Long id, int pagina, int tamanio) {
+        Pageable pageable = Pageable.ofSize(tamanio).withPage(pagina);
+        Page<Reserva> reservas = reservaRepository.findByAlojamientoId(id, pageable);
+        return reservas.map(reservaMapper::toAlojamientoDTO);
     }
+
     @Override
     public void guardar(RealizarReservaDTO reservadto) throws Exception {
 

@@ -18,6 +18,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -231,8 +234,16 @@ class ReservaServiceUnitTest {
 
     @Test
     void testObtenerReservasPorHuesped() {
-        when(reservaRepository.findByHuespedId(huesped.getId())).thenReturn(List.of(reserva));
+        int page = 0;
+        int size = 12;
+
+        // Mock del usuario autenticado
         when(authService.getUsuarioAutenticado()).thenReturn(huesped);
+
+        // Mock del repositorio para devolver una página con 1 reserva
+        Page<Reserva> reservasPage = new PageImpl<>(List.of(reserva), PageRequest.of(page, size), 1);
+        when(reservaRepository.findByHuespedId(eq(huesped.getId()), any(org.springframework.data.domain.Pageable.class)))
+                .thenReturn(reservasPage);
 
         ReservaUsuarioDTO dto = new ReservaUsuarioDTO(
                 reserva.getId(),
@@ -247,14 +258,24 @@ class ReservaServiceUnitTest {
 
         when(reservaMapper.toUsuarioDTO(reserva)).thenReturn(dto);
 
-        List<ReservaUsuarioDTO> result = reservaService.obtenerMisReservas();
-        assertEquals(1, result.size());
-        assertEquals("Cabaña del Bosque", result.get(0).alojamientoTitulo());
+        Page<ReservaUsuarioDTO> result = reservaService.obtenerMisReservas(page, size);
+
+        assertEquals(1, result.getContent().size());
+        assertEquals("Cabaña del Bosque", result.getContent().get(0).alojamientoTitulo());
+
+        verify(reservaRepository, times(1)).findByHuespedId(eq(huesped.getId()), any(org.springframework.data.domain.Pageable.class));
+        verify(reservaMapper, times(1)).toUsuarioDTO(reserva);
     }
 
     @Test
     void testObtenerReservasPorAlojamiento() {
-        when(reservaRepository.findByAlojamientoId(alojamiento.getId())).thenReturn(List.of(reserva));
+        int page = 0;
+        int size = 12;
+
+        // Mock del repositorio para devolver una página con 1 reserva
+        Page<Reserva> reservasPage = new PageImpl<>(List.of(reserva), PageRequest.of(page, size), 1);
+        when(reservaRepository.findByAlojamientoId(eq(alojamiento.getId()), any(org.springframework.data.domain.Pageable.class)))
+                .thenReturn(reservasPage);
 
         ReservaAlojamientoDTO dto = new ReservaAlojamientoDTO(
                 reserva.getId(),
@@ -270,8 +291,15 @@ class ReservaServiceUnitTest {
 
         when(reservaMapper.toAlojamientoDTO(reserva)).thenReturn(dto);
 
-        List<ReservaAlojamientoDTO> result = reservaService.obtenerReservasPorIdAlojamiento(alojamiento.getId());
-        assertEquals(1, result.size());
-        assertEquals(huesped.getId(), result.get(0).idHuesped());
+        // Llamada al servicio (ahora paginado)
+        Page<ReservaAlojamientoDTO> resultPage = reservaService.obtenerReservasPorIdAlojamiento(alojamiento.getId(), page, size);
+
+        // Asserts
+        assertEquals(1, resultPage.getContent().size());
+        assertEquals(huesped.getId(), resultPage.getContent().get(0).idHuesped());
+
+        // Verificaciones
+        verify(reservaRepository, times(1)).findByAlojamientoId(eq(alojamiento.getId()), any(org.springframework.data.domain.Pageable.class));
+        verify(reservaMapper, times(1)).toAlojamientoDTO(reserva);
     }
 }

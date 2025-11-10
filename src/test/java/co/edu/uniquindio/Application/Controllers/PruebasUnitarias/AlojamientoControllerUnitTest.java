@@ -15,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
@@ -48,14 +50,14 @@ class AlojamientoControllerUnitTest {
 
     @BeforeEach
     void setUp() {
-         fechaMin = LocalDateTime.now().minusDays(10);
-         fechaMax = LocalDateTime.now();
-         metricasDTO = new MetricasDTO(3.0, 50);
+        fechaMin = LocalDateTime.now().minusDays(10);
+        fechaMax = LocalDateTime.now();
+        metricasDTO = new MetricasDTO(3.0, 50);
         // Ubicación
         ubicacionDTO = new UbicacionDTO("Calle 123", "Bogotá D.C.", "Colombia", 4.7, -74.1);
 
         // Galería
-        galeriaMultipart = List.of(new MockMultipartFile("imagen1", "imagen1.jpg", "image/jpeg", new byte[]{1,2,3}));
+        galeriaMultipart = List.of(new MockMultipartFile("imagen1", "imagen1.jpg", "image/jpeg", new byte[]{1, 2, 3}));
 
         // DTO que recibe el controller (multipart)
         crearAlojamientoDTO = new CrearAlojamientoDTO(
@@ -173,54 +175,97 @@ class AlojamientoControllerUnitTest {
         assertEquals("Alojamiento no encontrado", ex.getMessage());
         verify(alojamientoService, times(1)).verMetricas(idAlojamiento, fechaMin, fechaMax);
     }
+
     @Test
     void listarTodosExitoso() throws Exception {
-        when(alojamientoService.listarTodos()).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.listarTodos();
+        Page<AlojamientoDTO> page = new PageImpl<>(List.of(alojamientoDTO));
+        when(alojamientoService.listarTodos(anyInt(), anyInt())).thenReturn(page);
+
+        ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> response = alojamientoController.listarTodos(0, 10);
+
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(1, response.getBody().content().size());
-        verify(alojamientoService, times(1)).listarTodos();
+        assertNotNull(response.getBody());
+        assertFalse(response.getBody().error());
+        assertEquals(1, response.getBody().content().getContent().size());
+        verify(alojamientoService, times(1)).listarTodos(anyInt(), anyInt());
     }
 
     @Test
     void buscarPorCiudadExitoso() throws Exception {
-        when(alojamientoService.buscarPorCiudad("Bogotá")).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorCiudad("Bogotá");
-        assertEquals(1, response.getBody().content().size());
-        verify(alojamientoService, times(1)).buscarPorCiudad("Bogotá");
+        Page<AlojamientoDTO> page = new PageImpl<>(List.of(alojamientoDTO));
+        when(alojamientoService.buscarPorCiudad(eq("Bogotá"), anyInt(), anyInt())).thenReturn(page);
+
+        ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> response =
+                alojamientoController.buscarPorCiudad("Bogotá", 0, 10);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().content().getContent().size());
+        verify(alojamientoService, times(1))
+                .buscarPorCiudad(eq("Bogotá"), anyInt(), anyInt());
     }
 
     @Test
     void buscarPorFechasExitoso() throws Exception {
         LocalDateTime inicio = LocalDateTime.now();
         LocalDateTime fin = inicio.plusDays(5);
-        when(alojamientoService.buscarPorFechas(inicio, fin)).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorFechas(inicio, fin);
-        assertEquals(1, response.getBody().content().size());
-        verify(alojamientoService, times(1)).buscarPorFechas(inicio, fin);
+        Page<AlojamientoDTO> page = new PageImpl<>(List.of(alojamientoDTO));
+
+        when(alojamientoService.buscarPorFechas(eq(inicio), eq(fin), anyInt(), anyInt()))
+                .thenReturn(page);
+
+        ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> response =
+                alojamientoController.buscarPorFechas(inicio, fin, 0, 10);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().content().getContent().size());
+        verify(alojamientoService, times(1))
+                .buscarPorFechas(eq(inicio), eq(fin), anyInt(), anyInt());
     }
 
     @Test
     void buscarPorPrecioExitoso() throws Exception {
-        when(alojamientoService.buscarPorPrecio(50.0, 200.0)).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorPrecio(50.0, 200.0);
-        assertEquals(1, response.getBody().content().size());
-        verify(alojamientoService, times(1)).buscarPorPrecio(50.0, 200.0);
+        Page<AlojamientoDTO> page = new PageImpl<>(List.of(alojamientoDTO));
+        when(alojamientoService.buscarPorPrecio(eq(50.0), eq(200.0), anyInt(), anyInt()))
+                .thenReturn(page);
+
+        ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> response =
+                alojamientoController.buscarPorPrecio(50.0, 200.0, 0, 10);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().content().getContent().size());
+        verify(alojamientoService, times(1))
+                .buscarPorPrecio(eq(50.0), eq(200.0), anyInt(), anyInt());
     }
 
     @Test
     void buscarPorServiciosExitoso() throws Exception {
-        when(alojamientoService.buscarPorServicios(List.of("WiFi", "Piscina"))).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.buscarPorServicios(List.of("WiFi", "Piscina"));
-        assertEquals(1, response.getBody().content().size());
-        verify(alojamientoService, times(1)).buscarPorServicios(List.of("WiFi", "Piscina"));
+        List<String> servicios = List.of("WiFi", "Piscina");
+        Page<AlojamientoDTO> page = new PageImpl<>(List.of(alojamientoDTO));
+
+        when(alojamientoService.buscarPorServicios(eq(servicios), anyInt(), anyInt()))
+                .thenReturn(page);
+
+        ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> response =
+                alojamientoController.buscarPorServicios(servicios, 0, 10);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().content().getContent().size());
+        verify(alojamientoService, times(1))
+                .buscarPorServicios(eq(servicios), anyInt(), anyInt());
     }
 
     @Test
     void listarPorAnfitrionExitoso() throws Exception {
-        when(alojamientoService.listarPorAnfitrion(1L)).thenReturn(List.of(alojamientoDTO));
-        ResponseEntity<ResponseDTO<List<AlojamientoDTO>>> response = alojamientoController.listarPorAnfitrion(1L);
-        assertEquals(1, response.getBody().content().size());
-        verify(alojamientoService, times(1)).listarPorAnfitrion(1L);
+        Page<AlojamientoDTO> page = new PageImpl<>(List.of(alojamientoDTO));
+        when(alojamientoService.listarPorAnfitrion(eq(1L), anyInt(), anyInt()))
+                .thenReturn(page);
+
+        ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> response =
+                alojamientoController.listarPorAnfitrion(1L, 0, 10);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().content().getContent().size());
+        verify(alojamientoService, times(1))
+                .listarPorAnfitrion(eq(1L), anyInt(), anyInt());
     }
 }
