@@ -16,6 +16,9 @@ import co.edu.uniquindio.Application.Services.ComentarioService;
 import co.edu.uniquindio.Application.Mappers.ComentarioMapper;
 import co.edu.uniquindio.Application.Services.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -90,11 +93,10 @@ public class ComentarioServiceImpl implements ComentarioService {
         );
     }
 
-    public List<ComentarioDTO> listarComentariosPorAlojamiento(Long alojamientoId) {
-        return comentarioRepository.findByAlojamientoIdOrderByFechaDesc(alojamientoId)
-                .stream()
-                .map(comentarioMapper::toDto)
-                .toList();
+    public Page<ComentarioDTO> listarComentariosPorAlojamiento(Long alojamientoId, int pagina, int tamanio) {
+        Pageable pageable = PageRequest.of(pagina, tamanio);
+        return comentarioRepository.findByAlojamientoIdOrderByFechaDesc(alojamientoId, pageable)
+                .map(comentarioMapper::toDto);
     }
 
 }

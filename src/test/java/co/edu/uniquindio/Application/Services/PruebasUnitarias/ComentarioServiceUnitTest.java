@@ -26,6 +26,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -145,25 +148,27 @@ class ComentarioServiceUnitTest {
                 comentario.getFecha()
         );
 
-        when(comentarioRepository.findByAlojamientoIdOrderByFechaDesc(alojamientoId))
-                .thenReturn(List.of(comentario));
+        Page<Comentario> page = new PageImpl<>(List.of(comentario));
+        when(comentarioRepository.findByAlojamientoIdOrderByFechaDesc(eq(alojamientoId), any(Pageable.class)))
+                .thenReturn(page);
 
         // Mock del mapper
         when(comentarioMapper.toDto(any(Comentario.class))).thenReturn(comentarioDTO);
 
         // Ejecución
-        List<ComentarioDTO> resultado = comentarioService.listarComentariosPorAlojamiento(alojamientoId);
+        Page<ComentarioDTO> resultado = comentarioService.listarComentariosPorAlojamiento(alojamientoId, 0, 12);
 
         // Verificaciones
         assertNotNull(resultado);
-        assertEquals(1, resultado.size(), "Debe devolver exactamente 1 comentario");
-        assertEquals("Todo excelente", resultado.get(0).texto());
-        assertEquals(5, resultado.get(0).calificacion());
+        assertEquals(1, resultado.getTotalElements(), "Debe devolver exactamente 1 comentario");
+        assertEquals("Todo excelente", resultado.getContent().get(0).texto());
+        assertEquals(5, resultado.getContent().get(0).calificacion());
 
-        verify(comentarioRepository, times(1)).findByAlojamientoIdOrderByFechaDesc(alojamientoId);
+        verify(comentarioRepository, times(1))
+                .findByAlojamientoIdOrderByFechaDesc(eq(alojamientoId), any(Pageable.class));
     }
 
-    @Test
+        @Test
     void testCrearComentarioReservaNoExiste() {
         ComentarDTO dto = new ComentarDTO("No debería guardarse", 4, 1L);
         when(reservaRepository.findById(999L)).thenReturn(Optional.empty());
@@ -202,10 +207,11 @@ class ComentarioServiceUnitTest {
 
     @Test
     void testListarComentariosPorAlojamientoVacio() throws Exception {
-        lenient().when(comentarioRepository.findByAlojamientoId(99L))
-                .thenReturn(Collections.emptyList());
+        Page<Comentario> vacio = new PageImpl<>(Collections.emptyList());
+        when(comentarioRepository.findByAlojamientoIdOrderByFechaDesc(eq(99L), any(Pageable.class)))
+                .thenReturn(vacio);
 
-        List<ComentarioDTO> resultado = comentarioService.listarComentariosPorAlojamiento(99L);
+        Page<ComentarioDTO> resultado = comentarioService.listarComentariosPorAlojamiento(99L, 0, 12);
 
         assertNotNull(resultado);
         assertTrue(resultado.isEmpty());

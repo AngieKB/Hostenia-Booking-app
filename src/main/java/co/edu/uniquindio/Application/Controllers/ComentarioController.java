@@ -5,6 +5,7 @@ import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
 import co.edu.uniquindio.Application.DTO.ResponseDTO;
 import co.edu.uniquindio.Application.Services.impl.ComentarioServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +28,10 @@ public class ComentarioController {
 
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @GetMapping("/alojamiento/{idAlojamiento}")
-    public ResponseEntity<ResponseDTO<List<ComentarioDTO>>> obtenerComentariosPorAlojamiento(@PathVariable("idAlojamiento") Long idAlojamiento) throws Exception{
-        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), comentarioService.listarComentariosPorAlojamiento(idAlojamiento)));
+    public ResponseEntity<ResponseDTO<Page<ComentarioDTO>>> obtenerComentariosPorAlojamiento(@PathVariable("idAlojamiento") Long idAlojamiento,
+           @RequestParam(defaultValue = "0") int pagina,
+           @RequestParam(defaultValue = "12") int tamanio) throws Exception{
+        Page<ComentarioDTO> comentarios = comentarioService.listarComentariosPorAlojamiento(idAlojamiento, pagina, tamanio);
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), comentarios));
     }
 }

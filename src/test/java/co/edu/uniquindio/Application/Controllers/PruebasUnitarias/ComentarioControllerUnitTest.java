@@ -2,6 +2,7 @@ package co.edu.uniquindio.Application.Controllers.PruebasUnitarias;
 
 import co.edu.uniquindio.Application.Controllers.ComentarioController;
 import co.edu.uniquindio.Application.DTO.Comentario.ComentarDTO;
+import co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO;
 import co.edu.uniquindio.Application.DTO.ResponseDTO;
 import co.edu.uniquindio.Application.Services.impl.ComentarioServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
@@ -71,35 +75,38 @@ class ComentarioControllerUnitTest {
 
     @Test
     void testListarComentariosPorAlojamientoExitoso() throws Exception {
-        var comentarioDTO = new co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO(
+        ComentarioDTO comentarioDTO = new ComentarioDTO(
                 1L, "Todo bien", 5, LocalDateTime.now()
         );
 
-        when(comentarioService.listarComentariosPorAlojamiento(1L))
-                .thenReturn(List.of(comentarioDTO));
+        Page<ComentarioDTO> paginaComentarios =
+                new PageImpl<>(List.of(comentarioDTO), PageRequest.of(0, 12), 1);
 
-        ResponseEntity<ResponseDTO<List<co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO>>> response =
-                comentarioController.obtenerComentariosPorAlojamiento(1L);
+        when(comentarioService.listarComentariosPorAlojamiento(eq(1L), anyInt(), anyInt()))
+                .thenReturn(paginaComentarios);
+
+        ResponseEntity<ResponseDTO<Page<co.edu.uniquindio.Application.DTO.Comentario.ComentarioDTO>>> response =
+                comentarioController.obtenerComentariosPorAlojamiento(1L, 0, 12);
 
         assertNotNull(response);
         assertEquals(200, response.getStatusCodeValue());
         assertFalse(response.getBody().error());
-        assertEquals(1, response.getBody().content().size());
-        assertEquals("Todo bien", response.getBody().content().get(0).texto());
+        assertEquals(1, response.getBody().content().getTotalElements());
+        assertEquals("Todo bien", response.getBody().content().getContent().get(0).texto());
 
-        verify(comentarioService, times(1)).listarComentariosPorAlojamiento(1L);
+        verify(comentarioService, times(1)).listarComentariosPorAlojamiento(1L, 0, 12);
     }
 
     @Test
     void testListarComentariosPorAlojamientoError() throws Exception {
-        when(comentarioService.listarComentariosPorAlojamiento(1L))
+        when(comentarioService.listarComentariosPorAlojamiento(1L, 0, 12))
                 .thenThrow(new Exception("Error al listar"));
 
         Exception exception = assertThrows(Exception.class, () ->
-                comentarioController.obtenerComentariosPorAlojamiento(1L)
+                comentarioController.obtenerComentariosPorAlojamiento(1L, 0, 12)
         );
 
         assertEquals("Error al listar", exception.getMessage());
-        verify(comentarioService, times(1)).listarComentariosPorAlojamiento(1L);
+        verify(comentarioService, times(1)).listarComentariosPorAlojamiento(1L, 0, 12);
     }
 }
