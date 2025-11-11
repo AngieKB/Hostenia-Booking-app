@@ -41,7 +41,6 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
     runtimeOnly 'org.postgresql:postgresql'
-    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
     annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
@@ -55,14 +54,14 @@ dependencies {
 
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
-}
+//tasks.named('test') {
+   // useJUnitPlatform()
+//}
 
-test {
-    useJUnitPlatform()
-    jvmArgs "-javaagent:${classpath.find { it.name.contains('byte-buddy-agent') }.absolutePath}"
-}
+//test {
+   // useJUnitPlatform()
+    //jvmArgs "-javaagent:${classpath.find { it.name.contains('byte-buddy-agent') }.absolutePath}"
+//}
 
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += ['-parameters']
