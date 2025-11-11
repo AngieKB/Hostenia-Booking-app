@@ -10,6 +10,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 
+import java.util.List;
+
 @Mapper (componentModel = MappingConstants.ComponentModel.SPRING)
 public interface AlojamientoMapper {
 
@@ -18,7 +20,7 @@ public interface AlojamientoMapper {
     @Mapping(target = "reservas", ignore = true)
     Alojamiento toEntity(CrearAlojamientoDTO dto);
 
-    @Mapping(target = "galeria", ignore = true)
+    @Mapping(target = "galeria", source = "galeria")
     AlojamientoDTO toDTO(Alojamiento entity);
     default Ubicacion crearUbicacion(CrearAlojamientoDTO dto) {
         return new Ubicacion(
@@ -28,6 +30,9 @@ public interface AlojamientoMapper {
                 dto.latitud(),
                 dto.longitud()
         );
+    }
+    default List<String> mapGaleria(Alojamiento entity) {
+        return entity.getGaleria(); // esto es la lista de URLs
     }
 
     default String getPrimeraFoto(Alojamiento entity) {

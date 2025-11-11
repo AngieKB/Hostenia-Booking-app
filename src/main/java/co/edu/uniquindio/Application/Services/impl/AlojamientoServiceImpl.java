@@ -61,9 +61,12 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     }
 
     @Override
-    public AlojamientoDTO obtenerPorId(Long id) throws Exception{
-        return alojamientoRepository.findById(id).map(alojamientoMapper::toDTO).orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
+    public AlojamientoDTO obtenerPorId(Long id) throws Exception {
+        Alojamiento alojamiento = alojamientoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
+        return alojamientoMapper.toDTO(alojamiento);
     }
+
 
     @Override
     public void editarAlojamiento(Long id, EditarAlojamientoDTO alojadto, UbicacionDTO ubicaciondto) throws Exception {

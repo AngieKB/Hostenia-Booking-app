@@ -12,7 +12,7 @@ public record AlojamientoDTO (
     String titulo,
     String descripcion,
     List<String> servicios,
-    List<MultipartFile> galeria,
+    List<String> galeria,
     UbicacionDTO ubicacion,
     Double precioNoche,
     Integer capacidadMax,
