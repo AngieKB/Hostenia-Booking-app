@@ -36,6 +36,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO<>(false, HttpStatus.CREATED.value(), "El registro ha sido exitoso"));
     }
 
+    @PreAuthorize("hasRole('HUESPED')")
     @PostMapping("/host-register")
     public ResponseEntity<ResponseDTO<String>> crearPerfilAnfitrion(@Valid @RequestBody CrearAnfitrionDTO dto) {
         perfilAnfitrionService.crearPerfil(dto);

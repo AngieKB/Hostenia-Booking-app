@@ -59,8 +59,8 @@ public class ReservaController {
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/mis-reservas")
     public ResponseEntity<ResponseDTO<Page<ReservaUsuarioDTO>>> obtenerMisReservas(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(name= "page", defaultValue = "0") int page,
+            @RequestParam(name= "size", defaultValue = "12") int size) {
 
         Page<ReservaUsuarioDTO> reservas = reservaService.obtenerMisReservas(page, size);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), reservas));
@@ -70,8 +70,8 @@ public class ReservaController {
     @GetMapping("/mis-reservas-aloja/{alojamientoId}")
     public ResponseEntity<ResponseDTO<Page<ReservaAlojamientoDTO>>> obtenerMisReservasPorAlojamiento(
             @PathVariable("alojamientoId") Long alojamientoId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "12") int size) {
+            @RequestParam(name= "page", defaultValue = "0") int page,
+            @RequestParam(name= "size", defaultValue = "12") int size) {
 
         Page<ReservaAlojamientoDTO> reservas = reservaService.obtenerReservasPorIdAlojamiento(alojamientoId, page, size);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), reservas));

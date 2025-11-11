@@ -59,11 +59,10 @@ public class AlojamientoController {
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), alojamientoService.obtenerPorId(id)));
     }
 
-    @PreAuthorize("hasRole('HUESPED')")
     @GetMapping
     public ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> listarTodos(
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "12") int tamanio) throws Exception {
+            @RequestParam(name= "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name= "tamanio", defaultValue = "12") int tamanio) throws Exception {
         Page<AlojamientoDTO> result = alojamientoService.listarTodos(pagina, tamanio);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), result));
     }
@@ -82,8 +81,8 @@ public class AlojamientoController {
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/buscar/ciudad")
     public ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> buscarPorCiudad(@RequestParam("ciudad") String ciudad,
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "12") int tamanio) throws Exception {
+            @RequestParam(name= "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name= "tamanio", defaultValue = "12") int tamanio) throws Exception {
         Page<AlojamientoDTO> result = alojamientoService.buscarPorCiudad(ciudad, pagina, tamanio);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value() , result));
     }
@@ -93,8 +92,8 @@ public class AlojamientoController {
     public ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> buscarPorFechas(
             @RequestParam("fechaInicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicio,
             @RequestParam("fechaFin") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFin,
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "12") int tamanio
+            @RequestParam(name= "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name= "tamanio", defaultValue = "12") int tamanio
     ) throws Exception {
         Page<AlojamientoDTO> result = alojamientoService.buscarPorFechas(fechaInicio, fechaFin, pagina, tamanio);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), result));
@@ -105,8 +104,8 @@ public class AlojamientoController {
     public ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> buscarPorPrecio(
             @RequestParam("precioMin") Double precioMin,
             @RequestParam("precioMax") Double precioMax,
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "12") int tamanio
+            @RequestParam(name= "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name= "tamanio", defaultValue = "12") int tamanio
     ) throws Exception {
         Page<AlojamientoDTO> result = alojamientoService.buscarPorPrecio(precioMin, precioMax, pagina, tamanio);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), result));
@@ -116,8 +115,8 @@ public class AlojamientoController {
     @GetMapping("/buscar/servicios")
     public ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> buscarPorServicios(
             @RequestParam("servicios") List<String> servicios,
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "12") int tamanio
+            @RequestParam(name= "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name= "tamanio", defaultValue = "12") int tamanio
     ) throws Exception {
         Page<AlojamientoDTO> result = alojamientoService.buscarPorServicios(servicios, pagina, tamanio);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), result));
@@ -127,8 +126,8 @@ public class AlojamientoController {
     @GetMapping("/listarPorAnfitrion/{idAnfitrion}")
     public ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> listarPorAnfitrion(
             @PathVariable("idAnfitrion") Long idAnfitrion,
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "12") int tamanio
+            @RequestParam(name= "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name= "tamanio", defaultValue = "12") int tamanio
     ) throws Exception {
         Page<AlojamientoDTO> result = alojamientoService.listarPorAnfitrion(idAnfitrion, pagina, tamanio);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), result));
@@ -157,8 +156,8 @@ public class AlojamientoController {
     @PreAuthorize("hasRole('HUESPED')")
     @GetMapping("/favoritos")
     public ResponseEntity<ResponseDTO<Page<AlojamientoDTO>>> listarFavoritos(
-            @RequestParam(defaultValue = "0") int pagina,
-            @RequestParam(defaultValue = "12") int tamanio
+            @RequestParam(name= "pagina", defaultValue = "0") int pagina,
+            @RequestParam(name= "tamanio", defaultValue = "12") int tamanio
     ) throws Exception {
         Long usuarioId = authService.getUsuarioAutenticado().getId();
         Page<AlojamientoDTO> result = alojamientoService.listarFavoritos(usuarioId, pagina, tamanio);
