@@ -70,6 +70,11 @@ public class AlojamientoServiceImpl implements AlojamientoService {
 
     @Override
     public void editarAlojamiento(Long id, EditarAlojamientoDTO alojadto, UbicacionDTO ubicaciondto) throws Exception {
+        List<String> urls = new ArrayList<>();
+        for (MultipartFile imagen : alojadto.galeria()) {
+            Map result = imageService.upload(imagen);
+            urls.add(result.get("url").toString());  // guardamos la URL pública
+        }
         Alojamiento alojamiento = alojamientoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
 
@@ -81,6 +86,7 @@ public class AlojamientoServiceImpl implements AlojamientoService {
         }
 
         alojamientoMapper.updateEntity(alojamiento, alojadto, ubicaciondto);
+        alojamiento.setGaleria(urls);
         alojamientoRepository.save(alojamiento);
     }
 
