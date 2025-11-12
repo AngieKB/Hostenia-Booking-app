@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PerfilAnfitrionMapper {
 
+    @Mapping(target = "usuarioId", source = "usuario.id")
     PerfilAnfitrionDTO toDTO(PerfilAnfitrion entity);
 
     @Mapping(target = "usuario", ignore = true)
