@@ -1,5 +1,6 @@
 package co.edu.uniquindio.Application.Services.impl;
 
+import co.edu.uniquindio.Application.DTO.Alojamiento.AlojamientoDTO;
 import co.edu.uniquindio.Application.DTO.EmailDTO;
 import co.edu.uniquindio.Application.DTO.Reserva.*;
 import co.edu.uniquindio.Application.Exceptions.BadCredentialsException;
@@ -94,22 +95,36 @@ public class ReservaServiceImpl implements ReservaService {
         // Obtener reserva de la base de datos
         Reserva reserva = reservaRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("No existe una reserva con el id " + id));
-
+        System.out.println("Reserva encontrada en bd ");
         // Verificar estado de la reserva
         if (reserva.getEstado() == EstadoReserva.CANCELADA) {
             throw new InvalidOperationException("No se puede editar una reserva cancelada.");
         }
+        System.out.println("Estado reserva validado ");
 
         // Obtener usuario autenticado
         Usuario usuarioAutenticado = authService.getUsuarioAutenticado();
+        System.out.println("Usuario autenticado obtenido ");
 
         // Validar que el usuario pueda editar la reserva
         if (!reserva.getHuesped().getId().equals(usuarioAutenticado.getId())) {
             throw new InvalidOperationException("No tienes permisos para editar esta reserva.");
         }
+        System.out.println("Permisos validados ");
+//  Validar mínimo 1 noche
+        if(Duration.between(dto.fechaCheckIn(), dto.fechaCheckOut()).toDays() < 1) {
+            throw new InvalidOperationException("La reserva debe ser mínimo de 1 noche.");
+        }
+        if(reserva.getAlojamiento().getCapacidadMax()> dto.cantidadHuespedes()) {
+            throw new InvalidOperationException("Se supera la capacidad máxima del alojamiento.");
+        }
 
         // Actualizar campos de la reserva usando el mapper
         reservaMapper.updateReservaFromDTO(dto, reserva);
+        System.out.println("Campos de la reserva actualizados ");
+        double valorTotal = calcularValorTotal(reserva);
+        reserva.setTotal(valorTotal);
+        System.out.println("Valor total calculado ");
 
         // Guardar cambios
         reservaRepository.save(reserva);
@@ -131,6 +146,7 @@ public class ReservaServiceImpl implements ReservaService {
     public Page<ReservaAlojamientoDTO> obtenerReservasPorIdAlojamiento(Long id, int pagina, int tamanio) {
         Pageable pageable = Pageable.ofSize(tamanio).withPage(pagina);
         Page<Reserva> reservas = reservaRepository.findByAlojamientoId(id, pageable);
+
         return reservas.map(reservaMapper::toAlojamientoDTO);
     }
 
@@ -194,6 +210,12 @@ public class ReservaServiceImpl implements ReservaService {
     public double calcularValorTotal(Reserva reserva){
         long dias = reserva.getFechaCheckOut().toLocalDate().toEpochDay() - reserva.getFechaCheckIn().toLocalDate().toEpochDay();
         return dias * reserva.getAlojamiento().getPrecioNoche()* reserva.getCantidadHuespedes();
+    }
+    @Override
+    public ReservaUsuarioDTO obtenerPorId(Long id) throws Exception {
+        Reserva reserva = reservaRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Reserva no encontrado con id: " + id));
+        return reservaMapper.toUsuarioDTO(reserva);
     }
 
 }

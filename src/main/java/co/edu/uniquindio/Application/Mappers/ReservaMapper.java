@@ -15,11 +15,13 @@ public interface ReservaMapper {
     ReservaDTO toDTO(Reserva entity);
     @Mapping(source = "reserva.alojamiento.titulo", target = "alojamientoTitulo")
     @Mapping(source = "reserva.alojamiento.ubicacion.ciudad", target = "alojamientoCiudad")
+    @Mapping(source = "reserva.alojamiento.galeria", target = "alojamientoGaleria")
     ReservaUsuarioDTO toUsuarioDTO(Reserva reserva);
     @Mapping(source = "reserva.alojamiento.titulo", target = "alojamientoTitulo")
     @Mapping(source = "reserva.alojamiento.ubicacion.ciudad", target = "alojamientoCiudad")
     @Mapping(source = "reserva.huesped.id", target = "idHuesped")
     ReservaAlojamientoDTO toAlojamientoDTO(Reserva reserva);
+    @Mapping(target = "total", ignore = true)
     void updateReservaFromDTO(EditarReservaDTO dto, @MappingTarget Reserva reserva);
 
 }

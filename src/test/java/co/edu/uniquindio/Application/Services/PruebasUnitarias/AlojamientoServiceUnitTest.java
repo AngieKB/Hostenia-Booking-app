@@ -65,19 +65,19 @@ class AlojamientoServiceUnitTest {
         reservaDTO = new ReservaDTO(1L, 1L, 2L, LocalDateTime.of(2025, 5, 10, 15, 0), LocalDateTime.of(2025, 5, 15, 12, 0),
                 2, 750.00, EstadoReserva.CONFIRMADA);
 
-        alojamientoDTO = new AlojamientoDTO(
-                1L,
-                "Cabaña en las montañas",
-                "Una cabaña acogedora con vista al bosque y chimenea incluida.",
-                List.of("WiFi", "Chimenea", "Parqueadero", "Cocina equipada"),
-                null,
-                ubicacionDTO,
-                150.00,
-                4,
-                List.of(comentarioDTO),
-                List.of(reservaDTO),
-                EstadoAlojamiento.ACTIVO
-        );
+//        alojamientoDTO = new AlojamientoDTO(
+//                1L,
+//                "Cabaña en las montañas",
+//                "Una cabaña acogedora con vista al bosque y chimenea incluida.",
+//                List.of("WiFi", "Chimenea", "Parqueadero", "Cocina equipada"),
+//                null,
+//                ubicacionDTO,
+//                150.00,
+//                4,
+//                List.of(comentarioDTO),
+//                List.of(reservaDTO),
+//                EstadoAlojamiento.ACTIVO
+//        );
         editarAlojamientoDTO = new EditarAlojamientoDTO(
                 "Cabaña en las montañas",
                 "Una cabaña acogedora con vista al bosque y chimenea incluida.",

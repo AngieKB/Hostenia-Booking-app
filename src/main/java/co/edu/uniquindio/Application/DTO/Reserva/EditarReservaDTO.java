@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 public record EditarReservaDTO(
         LocalDateTime fechaCheckIn,
         LocalDateTime fechaCheckOut,
-        Integer cantidadHuespedes,
-        Double total
+        Integer cantidadHuespedes
 ) {
 }

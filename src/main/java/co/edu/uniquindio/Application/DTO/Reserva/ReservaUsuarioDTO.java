@@ -3,6 +3,7 @@ package co.edu.uniquindio.Application.DTO.Reserva;
 import co.edu.uniquindio.Application.Model.EstadoReserva;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record ReservaUsuarioDTO(
         Long id,
@@ -12,6 +13,7 @@ public record ReservaUsuarioDTO(
         Double total,
         EstadoReserva estado,
         String alojamientoTitulo,
-        String alojamientoCiudad
+        String alojamientoCiudad,
+        List<String> alojamientoGaleria
 ) {}
 

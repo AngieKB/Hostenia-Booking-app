@@ -1,5 +1,6 @@
 package co.edu.uniquindio.Application.Services;
 
+import co.edu.uniquindio.Application.DTO.Alojamiento.AlojamientoDTO;
 import co.edu.uniquindio.Application.DTO.Reserva.*;
 import co.edu.uniquindio.Application.Model.EstadoReserva;
 import org.springframework.data.domain.Page;
@@ -15,4 +16,6 @@ public interface ReservaService {
     void cancelarReserva(Long id);
     EstadoReserva obtenerEstadoReserva(Long id);
     void actualizarReservasCompletadas();
+    ReservaUsuarioDTO obtenerPorId(Long id) throws Exception;
+
 }

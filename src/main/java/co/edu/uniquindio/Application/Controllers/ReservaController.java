@@ -1,6 +1,7 @@
 package co.edu.uniquindio.Application.Controllers;
 
 import co.edu.uniquindio.Application.DTO.*;
+import co.edu.uniquindio.Application.DTO.Alojamiento.AlojamientoDTO;
 import co.edu.uniquindio.Application.DTO.Alojamiento.UbicacionDTO;
 import co.edu.uniquindio.Application.DTO.Reserva.*;
 import co.edu.uniquindio.Application.DTO.Usuario.UsuarioDTO;
@@ -33,9 +34,9 @@ public class ReservaController {
     @PutMapping("/{id}")
     public ResponseEntity<ResponseDTO<String>> edit(
             @PathVariable("id") Long id,
-            @Valid @RequestBody EditarReservaConUbicacionDTO dto) throws Exception {
+            @Valid @RequestBody EditarReservaDTO dto) throws Exception {
 
-        reservaService.editarReserva(id, dto.reserva());
+        reservaService.editarReserva(id, dto);
         // si quieres también actualizar ubicación aquí con dto.ubicacion()
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "La reserva ha sido actualizada"));
     }
@@ -75,5 +76,10 @@ public class ReservaController {
 
         Page<ReservaAlojamientoDTO> reservas = reservaService.obtenerReservasPorIdAlojamiento(alojamientoId, page, size);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), reservas));
+    }
+    @PreAuthorize("hasRole('HUESPED')")
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseDTO<ReservaUsuarioDTO>> obtenerPorId(@PathVariable("id") Long id) throws Exception{
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), reservaService.obtenerPorId(id)));
     }
 }
