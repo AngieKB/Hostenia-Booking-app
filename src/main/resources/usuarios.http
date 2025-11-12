@@ -17,7 +17,7 @@ Content-Disposition: form-data; name="telefono"
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="email"
 
-celestesofia2007@gmail.com
+cel@email.com
 ------WebKitFormBoundary7MA4YWxkTrZu0gW
 Content-Disposition: form-data; name="password"
 
@@ -69,7 +69,7 @@ POST http://localhost:8080/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "celestesofia2007@gmail.com",
+  "email": "cel@email.com",
   "password": "Cc123123"
 }
 
@@ -104,7 +104,7 @@ POST http://localhost:8080/api/auth/forgot-password
 Content-Type: application/json
 
 {
-  "email": "celestesofia2007@gmail.com"
+  "email": "cel@email.com"
 }
 
 ### Resetear la contraseña (se pega el codigo de verificación que llega al correo)
@@ -112,7 +112,7 @@ PUT  http://localhost:8080/api/auth/reset-password
 Content-Type: application/json
 
 {
-  "email": "celestesofia2007@gmail.com",
+  "email": "cel@email.com",
   "verificationCode": "689077",
   "newPassword": "Cc123124"
 }
