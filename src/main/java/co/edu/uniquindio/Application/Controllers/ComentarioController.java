@@ -29,8 +29,8 @@ public class ComentarioController {
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @GetMapping("/alojamiento/{idAlojamiento}")
     public ResponseEntity<ResponseDTO<Page<ComentarioDTO>>> obtenerComentariosPorAlojamiento(@PathVariable("idAlojamiento") Long idAlojamiento,
-           @RequestParam(defaultValue = "0") int pagina,
-           @RequestParam(defaultValue = "12") int tamanio) throws Exception{
+           @RequestParam(name = "pagina", defaultValue = "0") int pagina,
+           @RequestParam(name = "tamanio", defaultValue = "12") int tamanio) throws Exception{
         Page<ComentarioDTO> comentarios = comentarioService.listarComentariosPorAlojamiento(idAlojamiento, pagina, tamanio);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), comentarios));
     }
