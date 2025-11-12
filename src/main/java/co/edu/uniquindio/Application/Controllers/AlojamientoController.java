@@ -36,13 +36,14 @@ public class AlojamientoController {
     }
 
     @PreAuthorize("hasRole('ANFITRION')")
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<ResponseDTO<String>> editar(
             @PathVariable("id") Long id,
-            @Valid @RequestBody EditarAlojamientoRequest request
+            @Valid @ModelAttribute EditarAlojamientoDTO alojamientoDTO,
+            @Valid @ModelAttribute UbicacionDTO ubicacionDTO
     ) throws Exception {
 
-        alojamientoService.editarAlojamiento(id, request.alojamientoDTO(), request.ubicacionDTO());
+        alojamientoService.editarAlojamiento(id, alojamientoDTO, ubicacionDTO);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "El alojamiento ha sido actualizado"));
     }
 
@@ -50,7 +51,7 @@ public class AlojamientoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<ResponseDTO<String>> eliminar(@PathVariable("id") Long id) throws Exception{
         alojamientoService.eliminar(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseDTO<>(false, HttpStatus.NO_CONTENT.value(), "El usuario ha sido eliminado"));
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ResponseDTO<>(false, HttpStatus.NO_CONTENT.value(), "El alojamiento ha sido eliminado"));
     }
 
     @PreAuthorize("hasRole('HUESPED')")

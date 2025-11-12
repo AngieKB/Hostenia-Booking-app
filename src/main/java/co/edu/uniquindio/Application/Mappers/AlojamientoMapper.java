@@ -20,6 +20,8 @@ public interface AlojamientoMapper {
     @Mapping(target = "reservas", ignore = true)
     Alojamiento toEntity(CrearAlojamientoDTO dto);
 
+    @Mapping(target = "idAnfitrion", source = "anfitrion.id")
+    @Mapping(target = "nombreAnfitrion", source = "anfitrion.usuario.nombre")
     @Mapping(target = "galeria", source = "galeria")
     AlojamientoDTO toDTO(Alojamiento entity);
     default Ubicacion crearUbicacion(CrearAlojamientoDTO dto) {

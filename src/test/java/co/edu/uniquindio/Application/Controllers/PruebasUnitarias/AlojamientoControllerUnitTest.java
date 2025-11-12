@@ -79,7 +79,9 @@ class AlojamientoControllerUnitTest {
                 4,
                 List.of(comentarioDTO),
                 List.of(reservaDTO),
-                EstadoAlojamiento.ACTIVO
+                EstadoAlojamiento.ACTIVO,
+                1L,
+                "Juan Pérez"
         );
 
         editarAlojamientoDTO = new EditarAlojamientoDTO(
@@ -107,11 +109,33 @@ class AlojamientoControllerUnitTest {
 
     @Test
     void editarAlojamientoExitoso() throws Exception {
-        // Crear el DTO combinado
-        EditarAlojamientoRequest request = new EditarAlojamientoRequest(editarAlojamientoDTO, ubicacionDTO);
+        // Crear DTOs simulados
+        EditarAlojamientoDTO editarAlojamientoDTO = new EditarAlojamientoDTO(
+                "Cabaña en las montañas",
+                "Hermosa cabaña con vista al lago",
+                List.of("WiFi", "Piscina", "Cocina equipada"),
+                List.of(),
+                "Medellín",
+                "Calle 123 #45-67",
+                6.25184,
+                -75.56359,
+                250000.0,
+                6
+        );
+
+        UbicacionDTO ubicacionDTO = new UbicacionDTO(
+                "Ciudad Actualizada",
+                "Calle 123",
+                "Colombia",
+                4.567,
+                -74.123
+        );
+
+        // Simular respuesta esperada del servicio (no devuelve nada)
+        doNothing().when(alojamientoService).editarAlojamiento(1L, editarAlojamientoDTO, ubicacionDTO);
 
         // Ejecutar el método del controlador
-        ResponseEntity<ResponseDTO<String>> response = alojamientoController.editar(1L, request);
+        ResponseEntity<ResponseDTO<String>> response = alojamientoController.editar(1L, editarAlojamientoDTO, ubicacionDTO);
 
         // Verificar interacciones con el servicio
         verify(alojamientoService, times(1))

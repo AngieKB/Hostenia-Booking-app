@@ -18,6 +18,8 @@ public record AlojamientoDTO (
     Integer capacidadMax,
     List<ComentarioDTO> comentarios,
     List<ReservaDTO> reservas,
-    EstadoAlojamiento estado
+    EstadoAlojamiento estado,
+    Long idAnfitrion,
+    String nombreAnfitrion
 ){
 }

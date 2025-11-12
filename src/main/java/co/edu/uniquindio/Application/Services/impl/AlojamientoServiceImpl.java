@@ -71,9 +71,16 @@ public class AlojamientoServiceImpl implements AlojamientoService {
     @Override
     public void editarAlojamiento(Long id, EditarAlojamientoDTO alojadto, UbicacionDTO ubicaciondto) throws Exception {
         List<String> urls = new ArrayList<>();
-        for (MultipartFile imagen : alojadto.galeria()) {
-            Map result = imageService.upload(imagen);
-            urls.add(result.get("url").toString());  // guardamos la URL pública
+        if (alojadto.galeria() != null) {
+            for (MultipartFile imagen : alojadto.galeria()) {
+                if (imagen != null && !imagen.isEmpty()) {
+                    Map result = imageService.upload(imagen);
+                    Object urlObj = result.get("url");
+                    if (urlObj != null) {
+                        urls.add(urlObj.toString());
+                    }
+                }
+            }
         }
         Alojamiento alojamiento = alojamientoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Alojamiento no encontrado con id: " + id));
@@ -89,9 +96,6 @@ public class AlojamientoServiceImpl implements AlojamientoService {
         alojamiento.setGaleria(urls);
         alojamientoRepository.save(alojamiento);
     }
-
-
-
 
     @Override
     public Page<AlojamientoDTO> listarTodos(int pagina, int tamanio) {
