@@ -20,6 +20,7 @@ public interface ReservaMapper {
     @Mapping(source = "reserva.alojamiento.titulo", target = "alojamientoTitulo")
     @Mapping(source = "reserva.alojamiento.ubicacion.ciudad", target = "alojamientoCiudad")
     @Mapping(source = "reserva.huesped.id", target = "idHuesped")
+    @Mapping(source = "reserva.huesped.nombre", target = "nombreHuesped")
     ReservaAlojamientoDTO toAlojamientoDTO(Reserva reserva);
     @Mapping(target = "total", ignore = true)
     void updateReservaFromDTO(EditarReservaDTO dto, @MappingTarget Reserva reserva);

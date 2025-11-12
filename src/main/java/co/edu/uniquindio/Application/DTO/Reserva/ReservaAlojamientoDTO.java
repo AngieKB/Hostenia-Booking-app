@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 public record ReservaAlojamientoDTO(
         Long id,
         Long idHuesped,
+        String nombreHuesped,
         LocalDateTime fechaCheckIn,
         LocalDateTime fechaCheckOut,
         Integer cantidadHuespedes,

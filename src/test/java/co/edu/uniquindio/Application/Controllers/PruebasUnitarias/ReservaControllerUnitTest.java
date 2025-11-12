@@ -72,6 +72,7 @@ class ReservaControllerUnitTest {
         reservaAlojamientoDTO = new ReservaAlojamientoDTO(
                 1L,                   // id
                 1L,                   // idHuesped
+                "Juan Perez",        // nombreHuesped
                 LocalDateTime.now().plusDays(5),   // fechaCheckIn
                 LocalDateTime.now().plusDays(10), // fechaCheckOut
                 2,                     // cantidadHuespedes

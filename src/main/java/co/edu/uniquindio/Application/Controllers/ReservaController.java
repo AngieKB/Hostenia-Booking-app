@@ -47,6 +47,13 @@ public class ReservaController {
         reservaService.cancelarReserva(id);
         return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "La reserva ha sido cancelada"));
     }
+    @PreAuthorize("hasRole('ANFITRION')")
+    @PutMapping("/confirmar/{id}")
+    public ResponseEntity<ResponseDTO<String>> confirmar(@PathVariable("id") Long id) throws Exception{
+        reservaService.confirmarReservaUsuario(id);
+        return ResponseEntity.ok(new ResponseDTO<>(false, HttpStatus.OK.value(), "La reserva ha sido confirmada"));
+    }
+
 
     @PreAuthorize("hasAnyRole('HUESPED', 'ANFITRION')")
     @PutMapping("/actualizar-completadas")

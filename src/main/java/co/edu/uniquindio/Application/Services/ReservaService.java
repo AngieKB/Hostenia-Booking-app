@@ -14,6 +14,7 @@ public interface ReservaService {
     Page<ReservaUsuarioDTO> obtenerMisReservas(int pagina, int tamanio);
     Page<ReservaAlojamientoDTO> obtenerReservasPorIdAlojamiento(Long id, int pagina, int tamanio);
     void cancelarReserva(Long id);
+    void confirmarReservaUsuario(Long id);
     EstadoReserva obtenerEstadoReserva(Long id);
     void actualizarReservasCompletadas();
     ReservaUsuarioDTO obtenerPorId(Long id) throws Exception;

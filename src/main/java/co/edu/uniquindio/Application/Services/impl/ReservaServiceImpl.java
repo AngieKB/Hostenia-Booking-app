@@ -83,7 +83,46 @@ public class ReservaServiceImpl implements ReservaService {
             throw new ResourceNotFoundException("No existe una reserva con el id " + id);
         });
     }
+    @Override
+    public void confirmarReservaUsuario(Long id) {
+        reservaRepository.findById(id).ifPresentOrElse(reserva -> {
 
+            // Validar si la reserva ya está cancelada
+            if(reserva.getEstado() == EstadoReserva.CONFIRMADA) {
+                throw new InvalidOperationException("La reserva ya se encuentra confirmada.");
+            }
+
+            // Validar si la reserva ya está completada
+            if(reserva.getEstado() == EstadoReserva.COMPLETADA) {
+                throw new InvalidOperationException("No se puede confirmar una reserva que ya ha sido completada.");
+            }
+
+
+            reserva.setEstado(EstadoReserva.CONFIRMADA);
+            reservaRepository.save(reserva);
+
+            try {
+                emailService.sendMail(
+                        new EmailDTO("Confirmación de: " + reserva.getAlojamiento().getAnfitrion().getUsuario().getNombre(),
+                                "El anfitrion " + reserva.getAlojamiento().getAnfitrion().getUsuario().getNombre() +
+                                        " confirmó su reserva que está registrada para el día " + reserva.getFechaCheckIn() +
+                                        " en el alojamiento " + reserva.getAlojamiento().getTitulo(),
+                                reserva.getHuesped().getEmail())
+                );
+                emailService.sendMail(
+                        new EmailDTO("Confirmación de: " + reserva.getHuesped().getNombre(),
+                                "Ha confirmado su reserva que está registrada para el día " + reserva.getFechaCheckIn() +
+                                        " en el alojamiento " + reserva.getAlojamiento().getTitulo(),
+                                reserva.getAlojamiento().getAnfitrion().getUsuario().getEmail())
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        }, () -> {
+            throw new ResourceNotFoundException("No existe una reserva con el id " + id);
+        });
+    }
 
     @Override
     public EstadoReserva obtenerEstadoReserva(Long id) {
