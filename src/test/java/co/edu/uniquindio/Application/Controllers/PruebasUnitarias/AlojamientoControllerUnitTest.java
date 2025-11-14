@@ -65,7 +65,7 @@ class AlojamientoControllerUnitTest {
                 "Bogotá D.C.", "Calle 123", 4.7, -74.1, 150.0, 2, "Colombia"
         );
 
-        comentarioDTO = new ComentarioDTO(1L, "Escelente atención, increíble", 4, LocalDateTime.now());
+        comentarioDTO = new ComentarioDTO(1L, "Escelente atención, increíble", 4, LocalDateTime.now(),"paco","pepe","foto","foto","melo");
         reservaDTO = new ReservaDTO(1L, 1L, 1L, LocalDateTime.now(), LocalDateTime.now().plusDays(5), 1, 300.0, EstadoReserva.PENDIENTE);
 
         alojamientoDTO = new AlojamientoDTO(

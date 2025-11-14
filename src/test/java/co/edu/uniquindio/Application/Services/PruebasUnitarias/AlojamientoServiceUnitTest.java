@@ -61,7 +61,7 @@ class AlojamientoServiceUnitTest {
         MockitoAnnotations.openMocks(this);
 
         ubicacionDTO = new UbicacionDTO("Calle 123", "Bogotá", "Colombia", 4.7, -74.1);
-        comentarioDTO = new ComentarioDTO(1L, "Hermoso lugar, todo muy limpio y tranquilo.", 5, LocalDateTime.of(2025, 3, 15, 14, 30));
+        comentarioDTO = new ComentarioDTO(1L, "Hermoso lugar, todo muy limpio y tranquilo.", 5, LocalDateTime.of(2025, 3, 15, 14, 30),"paco","pepe","foto","foto","melo");
         reservaDTO = new ReservaDTO(1L, 1L, 2L, LocalDateTime.of(2025, 5, 10, 15, 0), LocalDateTime.of(2025, 5, 15, 12, 0),
                 2, 750.00, EstadoReserva.CONFIRMADA);
 

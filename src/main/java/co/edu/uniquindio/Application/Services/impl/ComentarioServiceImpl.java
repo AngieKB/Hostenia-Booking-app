@@ -97,6 +97,7 @@ public class ComentarioServiceImpl implements ComentarioService {
         Pageable pageable = PageRequest.of(pagina, tamanio);
         return comentarioRepository.findByAlojamientoIdOrderByFechaDesc(alojamientoId, pageable)
                 .map(comentarioMapper::toDto);
+
     }
 
 }

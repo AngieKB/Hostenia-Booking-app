@@ -76,7 +76,7 @@ class ComentarioControllerUnitTest {
     @Test
     void testListarComentariosPorAlojamientoExitoso() throws Exception {
         ComentarioDTO comentarioDTO = new ComentarioDTO(
-                1L, "Todo bien", 5, LocalDateTime.now()
+                1L, "Todo bien", 5, LocalDateTime.now(),"paco","pepe","foto","foto","melo"
         );
 
         Page<ComentarioDTO> paginaComentarios =

@@ -14,5 +14,10 @@ public interface ComentarioMapper {
     @Mapping(target = "huesped", ignore = true) // se pasa aparte
     @Mapping(target = "fecha", expression = "java(java.time.LocalDateTime.now())")
     Comentario toEntity(ComentarDTO dto);
+    @Mapping(source = "huesped.nombre", target = "nombreHuesped")  // Asume que Usuario tiene 'nombre'
+    @Mapping(source = "alojamiento.anfitrion.usuario.nombre", target = "nombreAnfitrion")  // Asume que Alojamiento tiene 'anfitrion' (Usuario) con 'nombre'
+    @Mapping(source = "huesped.fotoUrl", target = "fotoHuesped")  // Asume que Usuario tiene 'foto'
+    @Mapping(source = "alojamiento.anfitrion.usuario.fotoUrl", target = "fotoAnfitrion")
+    @Mapping(source = "respuesta.respuesta", target = "textoRespuesta")
     ComentarioDTO toDto(Comentario entity);
 }

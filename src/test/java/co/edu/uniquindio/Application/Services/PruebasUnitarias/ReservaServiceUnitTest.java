@@ -279,6 +279,7 @@ class ReservaServiceUnitTest {
         ReservaAlojamientoDTO dto = new ReservaAlojamientoDTO(
                 reserva.getId(),
                 huesped.getId(),
+                huesped.getNombre(),
                 reserva.getFechaCheckIn(),
                 reserva.getFechaCheckOut(),
                 reserva.getCantidadHuespedes(),

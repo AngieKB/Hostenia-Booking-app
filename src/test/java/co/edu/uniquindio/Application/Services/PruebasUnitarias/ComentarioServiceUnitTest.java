@@ -145,7 +145,11 @@ class ComentarioServiceUnitTest {
                 comentario.getId(),
                 comentario.getTexto(),
                 comentario.getCalificacion(),
-                comentario.getFecha()
+                comentario.getFecha(),
+                comentario.getHuesped().getNombre(),
+                comentario.getAlojamiento().getAnfitrion().getUsuario().getNombre(),
+                "fotoHuesped.jpg",
+                "fotoAnfitrion.jpg",comentario.getRespuesta().getRespuesta()
         );
 
         Page<Comentario> page = new PageImpl<>(List.of(comentario));

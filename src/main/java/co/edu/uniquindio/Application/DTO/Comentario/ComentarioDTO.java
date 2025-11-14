@@ -6,5 +6,12 @@ public record ComentarioDTO (
         Long id,
         String texto,
         Integer calificacion,
-        LocalDateTime fecha
+        LocalDateTime fecha,
+        String nombreHuesped,
+        String nombreAnfitrion,
+        String fotoHuesped,
+        String fotoAnfitrion,
+        String textoRespuesta
+
+
 ) {}
