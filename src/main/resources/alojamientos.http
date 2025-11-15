@@ -1,5 +1,8 @@
 @env = local
-@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImNlbGVzdGVzb2ZpYTIwMDdAZ21haWwuY29tIiwibmFtZSI6IkNlbGVzdGUiLCJyb2xlIjoiUk9MRV9IVUVTUEVEIiwic3ViIjoiNCIsImlhdCI6MTc2MjY2MjA5NCwiZXhwIjoxNzYyNjY1Njk0fQ.1u_NyEiVFi9QTTNISRSt9_i8Cimhk2_ErPacbv3G6Jc
+@tokenHuesped = eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV9IVUVTUEVEIiwibmFtZSI6IlBhYmxvIiwiZW1haWwiOiJwYWJsb0BnbWFpbC5jb20iLCJzdWIiOiIyIiwiaWF0IjoxNzYzMDg4MTA0LCJleHAiOjE3NjMwOTE3MDR9.X-Z1pRQeb_lN0MKk2OoSSiOK7NROVoorJIoLbRa_gis
+
+
+
 @tokenAnfitrion = eyJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6InNvZmlhQGVtaWFsLmNvbSIsIm5hbWUiOiJTb2ZpYSIsInJvbGUiOiJST0xFX0FORklUUklPTiIsInN1YiI6IjUiLCJpYXQiOjE3NjI3MTg2NzEsImV4cCI6MTc2MjcyMjI3MX0.6cGOQML_dFXKauwBE16ROIrq0xFELSt7aWpjwtl-oTU
 // ==========================================================
 // ===============  ENDPOINTS DE ALOJAMIENTOS  ==============
